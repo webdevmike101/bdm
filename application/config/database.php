@@ -75,10 +75,18 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => 'root',
-	'database' => 'bdm',
+	// Remote DB Development ///////////
+	'database' => 'devBDM',
+	'hostname' => 'briandorseymusic.com:3306',
+	'username' => 'devBDMAdmin',
+	'password' => '@3:gR7;Wv6!Mz6',
+	// Local DB Development ////////////
+	// 'database' => 'bdm',
+	// 'hostname' => 'localhost',
+	// 'username' => 'root',
+	// 'password' => 'root',
+	// Production /////////////////////
+	// 'database' => 'bdm',
 	// 'username' => 'adminMike',
 	// 'password' => 'myN2652N!!',
 	// 'database' => 'brianDorseyMinistries',
