@@ -1,0 +1,23 @@
+		<div id="upcoming-perfprmances-wrapper">
+			<div id=id="upcoming-performances-image-div" class="float-left" style="width: 60%">
+
+				<div><img src="images/studio1fade2.jpg" alt="Brian Dorsey in the recording studio" width="1000px"></div>
+
+			</div><!-- upcoming-performances-image-div -->
+
+			<div id="right-column-div" class="float-right" style="width: 40%">
+				<div id="upcoming-performances-div" class="">
+					<h3 class="text-center">Upcoming Performances</h3>
+					<div id="upcoming-performances-listing">
+						<?php foreach ($performances as $performance) : ?> 
+							<div class="single-performance-div">
+								<h4><?php echo $performance['venue'] ?></h4>
+								<p><?php echo $performance['street_address'] ?></p>
+								<p><?php echo $performance['city_state'] ?></p>
+								<p><?php echo $performance['date']. ' starting at '. $performance['time']?></p>
+							</div>		
+						<?php endforeach; ?>
+					</div><!-- end upcoming-performances-listing -->
+				</div><!-- end upcoming-performances-div -->	
+			</div><!-- end right-column-div -->
+		</div><!-- end upcoming-perfprmances-wrapper -->
