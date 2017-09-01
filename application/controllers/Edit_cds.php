@@ -58,7 +58,7 @@ class Edit_cds extends CI_Controller {
 		if($this->form_validation->run() !== false)
 		{
 			$this->load->model('cd_model');
-			$this->cd_model->_insert();			
+			$this->cd_model->_insertCD();			
 		}
 		else
 		{

@@ -84,15 +84,15 @@ class Cd_model extends CI_Model {
 		return $query;
 	}
 
-	function _insert() {
+	function _insertCD() {
 
 		$image = $this->input->post('userfile');
 
 		$image_data = _uploadImage($image);
 
 		$data = array(
-			'cd_image_path' => $image_data['full_path'],
-			'cd_name'		=> $this->input->post('title'),
+			'image_path' => $image_data['full_path'],
+			'cd_title'		=> $this->input->post('title'),
 			'price'			=> $this->input->post('price'),
 			'release_date'	=> $this->input->post('release_date'),
 			'total_songs'	=> $this->input->post('total_songs'),
@@ -103,16 +103,22 @@ class Cd_model extends CI_Model {
 
 		$songTitles = $this->input->post->('songTitles');
 
+		_insertSongTitles($songTitles);
+
+	}
+
+	function _insertSongTitles(songTitles){
+
 		foreach ($songTitles as $title) {
 			
 			
 		}
 	}
 
-	function _uploadImage(){
+	function _uploadImage($image){
 		
 		// Upload the CD image to the images folder
-		$uploadConfig - array(
+		$uploadConfig = array(
 			'image_library' => 'GD2',
 			'upload_path'	=> 'images/cds/',
 			'allowed_types'	=> 'gif|jpg|jpeg|png'
@@ -123,6 +129,11 @@ class Cd_model extends CI_Model {
 		$image_data = $this->upload->data();
 
 		return $image_data;
+	}
+
+	function _uploadSongClips(){
+
+		
 	}
 
 	function _update($id, $data) {
