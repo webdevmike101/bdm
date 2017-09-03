@@ -3,7 +3,6 @@
 class Cd_model extends CI_Model {
 
 	function __construct() {
-
 		parent::__construct();
 	}
 
@@ -12,7 +11,18 @@ class Cd_model extends CI_Model {
 		return $table;
 	}
 
-	function get() {
+	// function get($order_by) {
+	// 	$table = $this->get_table();
+	// 	$this->db->select('cd.cd_id, cd_title, release_date, song_title, song_number, price, image_path, total_songs, description');
+	// 	$this->db->order_by($order_by);
+	// 	$this->db->join('song', 'song.cd_id = cd.cd_id', 'left outer');
+	// 	$query = $this->db->get($table);
+	// 	$results = $query->result_array(); // I had to add this to make it work now. It was just returning $query. I guess it's a mysqli/new-CI-version issue
+		
+	// 	return $results;
+	// }
+
+		function get() {
 
 		$this->db->order_by('release_date desc');
 		$cds = $this->db->get('cd');
@@ -76,46 +86,46 @@ class Cd_model extends CI_Model {
 
 	function _insert() {
 
-		$config = array(
+		$image = $this->input->post('cd_image');
 
-			'upload_path'	=> './images/cds',
-			'allowed_types'	=> '*'
-
-		);
-
-		$this->load->library('upload', $config);	
-
-		$this->upload->do_upload();
-		$image_data = $this->upload->data();
+		$image_data = _uploadImage($image);
 
 		$data = array(
-
-			'image_path'	=> $image_data['full_path'],
+			'image_path' => $image_data['full_path'],
 			'cd_title'		=> $this->input->post('title'),
 			'price'			=> $this->input->post('price'),
 			'release_date'	=> $this->input->post('release_date'),
 			'total_songs'	=> $this->input->post('total_songs'),
-			'description'	=> $this->input->post('description')
+			'description'	=> $this->input->post('description'),
 		);
+		//$table = $this->get_table();
+		//$this->db->insert($table, $data);
 
-		$table = $this->get_table();
-		
-		if(!$this->db->insert($table, $data))
-		{
-			$message = array('msg' => $this->db->error());
-		}
-		else
-		{
-			$message = array('msg' => "Success!");
-		}
+		$this->load->view('see_view', $data);
 
-		$this->load->view('edit_cds_view', $message);
+		// $songTitles = $this->input->post->('songTitles');
 
+		// foreach ($songTitles as $title) {
+			
+			
+		// }
 	}
 
 	function _uploadImage(){
 		
- }
+		// Upload the CD image to the images folder
+		$uploadConfig - array(
+			'image_library' => 'GD2',
+			'upload_path'	=> './images/cds/',
+			'allowed_types'	=> 'gif|jpg|jpeg|png'
+		);
+
+		$this->load->library('upload', $uploadConfig);
+		$this->upload->do_upload(); // The CI do_upload function already looks for "userfile" as passed from the view.
+		$image_data = $this->upload->data();
+
+		return $image_data;
+	}
 
 	function _update($id, $data) {
 		$table = $this->get_table();
