@@ -74,7 +74,7 @@ class Cd_model extends CI_Model {
 		return $query;
 	}
 
-	function _insertCD() {
+	function _insert() {
 
 		$config = array(
 
@@ -89,12 +89,8 @@ class Cd_model extends CI_Model {
 		$image_data = $this->upload->data();
 
 		$data = array(
-<<<<<<< HEAD
 
 			'image_path'	=> $image_data['full_path'],
-=======
-			'image_path' => $image_data['full_path'],
->>>>>>> 428131f37fe5cd236ee98daffe31b1b452107c3b
 			'cd_title'		=> $this->input->post('title'),
 			'price'			=> $this->input->post('price'),
 			'release_date'	=> $this->input->post('release_date'),
@@ -115,45 +111,11 @@ class Cd_model extends CI_Model {
 
 		$this->load->view('edit_cds_view', $message);
 
-<<<<<<< HEAD
-=======
-		_insertSongTitles($songTitles);
-
 	}
 
-	function _insertSongTitles(songTitles){
-
-		foreach ($songTitles as $title) {
-			
-			
-		}
->>>>>>> 428131f37fe5cd236ee98daffe31b1b452107c3b
-	}
-
-	function _uploadImage($image){
+	function _uploadImage(){
 		
-<<<<<<< HEAD
  }
-=======
-		// Upload the CD image to the images folder
-		$uploadConfig = array(
-			'image_library' => 'GD2',
-			'upload_path'	=> 'images/cds/',
-			'allowed_types'	=> 'gif|jpg|jpeg|png'
-		);
-
-		$this->load->library('upload', $uploadConfig);
-		$this->upload->do_upload(); // The CI do_upload function already looks for "userfile" as passed from the view.
-		$image_data = $this->upload->data();
-
-		return $image_data;
-	}
->>>>>>> 428131f37fe5cd236ee98daffe31b1b452107c3b
-
-	function _uploadSongClips(){
-
-		
-	}
 
 	function _update($id, $data) {
 		$table = $this->get_table();
