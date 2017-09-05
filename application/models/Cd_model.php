@@ -74,21 +74,7 @@ class Cd_model extends CI_Model {
 		return $query;
 	}
 
-	function _insert() {
-
-		// $config = array(
-
-		// 	'upload_path'	=> './images/cds',
-		// 	'allowed_types'	=> '*'
-
-		// );
-
-		// $this->load->library('upload', $config);	
-
-		// $this->upload->do_upload();
-		// $image_data = $this->upload->data();
-
-		$image_data = $this->_uploadImage();
+	function _insert($image_data) {
 
 		$image_path	= $image_data['full_path'];
 		$cd_title = $this->input->post('title');
@@ -99,7 +85,8 @@ class Cd_model extends CI_Model {
 
 		$data = array(
 
-			// If the input is empty set it to null or the insert will still work
+			// If the input is empty set it to null or there will be an empty
+			// entry in the database. /////////////////////////////////////////
 			'image_path'	=> (!empty($image_path)) ? $image_path : null,
 			'cd_title'		=> (!empty($cd_title)) ? $cd_title : null,
 			'price'			=> (!empty($price)) ? $price : null,
@@ -110,60 +97,15 @@ class Cd_model extends CI_Model {
 
 		$table = $this->get_table();
 		
-		if(!$this->db->insert($table, $data))
-		{
-			$_SESSION['errors'] = $this->db->error();
-
-			return false;
-		}
-		else
+		if($this->db->insert($table, $data))
 		{
 			return true;
 		}
+		else
+		{
+			return false;
+		}
 	}
-
-	function _uploadImage(){
-		
-		// Upload the CD image to the images folder
-		$uploadConfig = array(
-			'image_library' => 'GD2',
-			'upload_path'	=> './images/cds/',
-			'allowed_types'	=> 'gif|jpg|jpeg|png'
-		);
-
-		$this->load->library('upload', $uploadConfig);
-		$this->upload->do_upload(); // The CI do_upload function already looks for "userfile" as passed from the view.
-		$image_data = $this->upload->data();
-
-		return $image_data;
- 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	function _update($id, $data) {
 		$table = $this->get_table();

@@ -47,7 +47,7 @@
 					'name'		=> 'userfile',
 					'id'		=> 'input_cd_image',
 					'maxlength'	=> '100',
-					'class'		=> 'form_input'
+					'class'		=> 'form_input file_selection'
 					);
 
 				$st = ""; // SESSION title
@@ -66,7 +66,6 @@
 				}
 							
 			?>
-			<?=CI_VERSION;?>
 			<h1>Edit CD's</h1>
 	
 			<!-- Get the CD Tilte -->
@@ -87,10 +86,32 @@
 				<?=form_input($release_date, $srd)?>
 			</div><br/>
 
-			<!-- Get the Total Number of Songs on the CD -->
+		<!-- Get the Total Number of Songs on the CD -->
 			<div>
 				<?=form_label('Total Songs:', 'total_songs')?>
 				<?=form_input($total_songs, $sts)?>
+
+				<!-- A button to bring up the song title input fields -->
+				<div style="display: inline; margin-left: 10px;">
+					<input type="button" id="enterSongTitles" value="Enter Song Titles" onclick="enterSongTitle()" />
+				</div>
+			</div><br/>
+
+			<!-- Get the song titles -->
+			<div class="form_input" id="song-input-div" style="margin-left: 50px">
+				<?php if(isset($_SESSION['total_songs']) && $_SESSION['total_songs'] > 0): ?>
+					<input type="hidden" id="hidden-total-songs" value="<?=$sts?>" />
+					<?php for($i = 1; $i <= $_SESSION['total_songs']; $i++): ?>
+						<div class='song-title-div' id='song-title-div-<?=$i?>'>
+							<label>Song <?=$i?></label>
+							<input type='text' size='50' autocomplete='off' class='form_input' id='song-title-input-<?=$i?>' name='song_<?=$i?>' value='<?php echo($_SESSION["song_$i"]); ?>'/>
+							<br/><div>
+								<label>Song Clip</label>
+								<input type='file' class='form_input file_selection' id='song-clip-input-'<?=$i?> name='song_clip_<?=$i?>'/>
+							</div>
+						</div>
+					<?php endfor; ?>
+				<?php endif; ?>
 			</div><br/>
 
 			<!-- Get the Description of the CD -->
@@ -114,20 +135,24 @@
 			<div id="errors">
 				<?php if(isset($_SESSION['errors'])): ?>
 
+					<!-- Make errors easily accessable by javascript to display them in an alert box
+						 rather than taking up space on the web page ///////////////////////////////// -->
 					<input type='hidden' id='hidden-errors' value='<?php echo ($_SESSION['errors']); ?>' />
 
-					<style type="text/css">#input_cd_image{color: red;}</style>
+					<!-- Set the text in the Choose file box to red to make it obvious that the user
+					     needs to reselect the file when there are errors ////////////////////////////// -->
+					<style type="text/css">.file_selection{color: red;}</style>
 
+					<!-- Display the errors //////////////////////////////////////////////////////////// -->
 					<script type='text/javascript'> 
 
-					var e = $('#hidden-errors').val();
-					var eClean = e.replace(/(<([^>]+)>)/ig,"");
+						var errors = $('#hidden-errors').val();
+						// remove the html tags from the errors so they don't show in the alert box. ///////
+						var errorsClean = errors.replace(/(<([^>]+)>)/ig,"");
 
-						alert(eClean);
+							alert(errorsClean);
 
 					</script>
-				
-
 
 					<?php	
 						
@@ -136,8 +161,17 @@
 						unset($_SESSION['price']);
 						unset($_SESSION['release_date']);
 						unset($_SESSION['description']);
+								
+						$num_songs = $this->input->post('total_songs');
+
+						for($i = 1; $i <= $num_songs; $i++)
+						{
+							unset($_SESSION['song_'.$i]);
+							unset($_SESSION['song_clip_'.$i]);
+						}
+
 						unset($_SESSION['total_songs']);
-						unset($_SESSION['cd_image']);
+						// unset($_SESSION['cd_image']);
 					?>	
 
 				<?php endif; ?>
@@ -146,6 +180,9 @@
 	</div><!-- end editCDs-->
 	<script type="text/javascript" src="scripts/js/scheduleDetails.js"></script>
 	<script type="text/javascript" src="scripts/js/lib/jquery-ui-1.10.4.custom.min.js"></script>
+	<!-- editCds.js must be loded after the page or the number of songs can't be changed after
+	     a failed upload without getting the song numbers out of whack. ////////////////////// -->
+	<script type="text/javascript" src="scripts/js/editCds.js"></script>
 	
 <body>
 </html>
