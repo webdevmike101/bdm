@@ -32,7 +32,7 @@ class Cd_model extends CI_Model {
 				'cd_title' 			=> $row['cd_title'],
 				'total_songs' 		=> $row['total_songs'],
 				'description'		=> $row['description'],
-				'image_path'		=> $row['image_path'],
+				'image_name'		=> $row['image_name'],
 				'price'				=> $row['price'],
 				'release_date'		=> $row['release_date']
 			);
@@ -44,7 +44,7 @@ class Cd_model extends CI_Model {
 					
 						'song_title'	=> $row['song_title'],
 						'song_number'	=> $row['song_number'],
-						'clip_path'		=> $row['clip_path']				
+						'clip_name'		=> $row['clip_name']				
 				)				
 			);		
 		}
@@ -76,18 +76,32 @@ class Cd_model extends CI_Model {
 
 	function _insert($image_data) {
 
-		$image_path	= $image_data['full_path'];
+		$image_name	= $image_data['file_name'];
 		$cd_title = $this->input->post('title');
 		$price = $this->input->post('price');
 		$release_date = $this->input->post('release_date');
 		$total_songs = $this->input->post('total_songs');
 		$description = $this->input->post('description');
 
-		$data = array(
+		$song_data = array();
+
+		for($i = 0; $i < $total_songs; $i++)
+		{
+			$song_title = $this->input->post('song_'.$i + 1);
+			$clip_name = $_FILES[$i]['name'];
+
+ 			$song_data[$i] = array(
+
+ 				'song_title' 	=> (!empty($song_title)) ? $song_title : null,
+ 				'clip_name'		=> (!empty($clip_name)) ? $clip_name : null,
+			);
+		}
+
+		$cd_data = array(
 
 			// If the input is empty set it to null or there will be an empty
 			// entry in the database. /////////////////////////////////////////
-			'image_path'	=> (!empty($image_path)) ? $image_path : null,
+			'image_name'	=> (!empty($image_name)) ? $image_name : null,
 			'cd_title'		=> (!empty($cd_title)) ? $cd_title : null,
 			'price'			=> (!empty($price)) ? $price : null,
 			'release_date'	=> (!empty($release_date)) ? $release_date : null,
@@ -97,7 +111,7 @@ class Cd_model extends CI_Model {
 
 		$table = $this->get_table();
 		
-		if($this->db->insert($table, $data))
+		if($this->db->insert($table, $cd_data))
 		{
 			return true;
 		}

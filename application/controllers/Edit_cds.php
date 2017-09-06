@@ -22,8 +22,9 @@ class Edit_cds extends CI_Controller {
 
 	function insert_cd()
 	{
-		// Unset previous errors if there were any, so if there are none /////////////////
-		// this time, there won't be errors carried over in $_SESSION. ///////////////////
+		// Unset previous errors if there were any, so if there are none ////////////////////
+		// this time, there won't be errors carried over in $_SESSION. //////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
 		unset($_SESSION['errors']);
 		unset($_SESSION['title']);
 		unset($_SESSION['price']);
@@ -35,13 +36,14 @@ class Edit_cds extends CI_Controller {
 		for($i = 1; $i <= $num_songs; $i++)
 		{
 			unset($_SESSION['song_'.$i]);
-			unset($_SESSION['song_clip_'.$i]);
 		}
 
 		unset($_SESSION['total_songs']);
 		/////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
 
 		// // Validate all form input. //////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('title', 'The Title', 'required');
 		$this->form_validation->set_rules('price', 'The Price', 'required');
@@ -51,21 +53,27 @@ class Edit_cds extends CI_Controller {
 		for($i = 1; $i <= $num_songs; $i++)
 		{
 			$this->form_validation->set_rules('song_'.$i, 'Song '.$i. " Title", 'required');
-			$this->form_validation->set_rules('song_clip_'.$i, 'Song Clip '.$i, 'required');
+
+			if(empty($_FILES['song_clip_'.$i]['name']))
+			{
+				$this->form_validation->set_rules('song_clip_'.$i, 'Song Clip '.$i, 'required');
+			}
 		}
 
 		$this->form_validation->set_rules('description', 'The Description', 'required');
 
 		// The CI userfile never validates, so I have to check $_FILES['userfile']['name'] and
 		// only set the validation rule for userfile if $_FILES['userfile']['name']) is empty.
-		if(empty($_FILES['userfile']['name']))
+		if(empty($_FILES['cd_image']['name']))
 		{
-			$this->form_validation->set_rules('userfile', 'An Image of the CD', 'required');
+			$this->form_validation->set_rules('cd_image', 'An Image of the CD', 'required');
 			$this->form_validation->set_message('required', '%s is required.');
 		};
 		/////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
 
- 		// If the form vaildates, insert the CD information. Image first ///////////////////
+ 		// If the form vaildates, insert the CD information. Image first ////////////////////
+ 		/////////////////////////////////////////////////////////////////////////////////////
 		if($this->form_validation->run())
 		{
 			// Set up the image upload configuration.
@@ -77,8 +85,9 @@ class Edit_cds extends CI_Controller {
 
 			// Upload the CD image to the images folder ///////////////////////////////////////
 			$this->load->library('upload', $uploadConfig);
+
 			// If the image upload is successful, insert the CD information. //////////////////
-			if($this->upload->do_upload()) // The CI do_upload function already looks for "userfile" as passed from the view.
+			if($this->upload->do_upload('cd_image')) // The CI do_upload function already looks for "userfile" as passed from the view.
 			{
 				// Get the image data for the image_path value in the insert
 				$image_data = $this->upload->data();
@@ -90,6 +99,10 @@ class Edit_cds extends CI_Controller {
 				if(!$this->cd_model->_insert($image_data))
 				{
 					$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";	
+				}
+				else
+				{
+					
 				}	
 			}
 			else
@@ -114,7 +127,6 @@ class Edit_cds extends CI_Controller {
 			for($i = 1; $i <= $num_songs; $i++)
 			{
 				$_SESSION['song_'.$i] = $this->input->post('song_'.$i);
-				$_SESSION['song_clip_'.$i] = $this->input->post('song_clip_'.$i);
 			}
 
 			$_SESSION['description'] = $this->input->post('description');

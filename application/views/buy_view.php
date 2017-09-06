@@ -44,7 +44,7 @@
 			
 		<div class="cdListingDiv" id="cd_<?php echo $cd['cd_id'] ?>">
 			<div class="cdImageDiv">
-				<img src="<?php echo $cd['image_path']; ?>" height="230" width="230">
+				<img src="images/cds/<?php echo $cd['image_name']; ?>" height="230" width="230">
 			</div>
 			<h3 class="cdTitle"><?php echo $cd['cd_title']; ?></h3>
 			<ol class="songList">
@@ -59,8 +59,12 @@
 
 						<?php endif; ?>
 
-						<?php $songTitle = $cd[$i]['song_title']; ?>
-						<li data-src="music/clips/<?php echo $songTitle; ?> clip.mp3"><?php echo $songTitle; ?></li>
+						<?php 
+								$songTitle = $cd[$i]['song_title']; 
+								$clipName = $cd[$i]['clip_name'];
+								$cdTitle = $cd['cd_title'];
+						?>
+						<li data-src="music/clips/<?php echo $cdTitle."/".$clipName; ?>"><?php echo $songTitle; ?></li>
 
 					<?php endfor; ?>
 				<?php endif; ?>

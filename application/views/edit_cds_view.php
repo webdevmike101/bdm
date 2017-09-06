@@ -44,7 +44,7 @@
 					);
 
 				$cd_image = array(
-					'name'		=> 'userfile',
+					'name'		=> 'cd_image',
 					'id'		=> 'input_cd_image',
 					'maxlength'	=> '100',
 					'class'		=> 'form_input file_selection'
@@ -122,8 +122,8 @@
 
 			<!-- Upload an Image of the CD -->
 			<div>
-				<?=form_label('Image:', 'userfile')?><!-- <input type='file' id='input_image_path' /> -->
-				<?=form_upload($cd_image)?><!-- CI expects "userfile" by default. -->
+				<?=form_label('Image:', 'cd_image')?><!-- CI expects "userfile" by default, but I'm changing it to cd_image in the controller. -->
+				<?=form_upload($cd_image)?>
 			</div><br/>
 
 			<!-- Submit the Form -->
