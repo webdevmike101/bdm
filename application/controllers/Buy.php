@@ -6,10 +6,9 @@ class Buy extends CI_Controller {
 	{
 		$data['title'] = "Purchase Brian Dorsey's Music";
 		$this->load->model('cd_model');
-		$data['cds'] = $this->cd_model->get();
+		$data['cds'] = $this->cd_model->get_cd();
 		$this->load->view('header_view', $data);
 		$this->load->view('buy_view');
-
 		$this->load->view('footer_view');
 	}
 }

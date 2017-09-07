@@ -7,20 +7,26 @@ class Cd_model extends CI_Model {
 		parent::__construct();
 	}
 
-	function get_table() {
-		$table = "cd";
-		return $table;
+	function get_cd_table() {
+		$cd_table = "cd";
+		return $cd_table;
 	}
 
-	function get() {
+	function get_song_table() {
+		$song_table = "song";
+		return $song_table;
+	}
+
+	function get_cd() {
 
 		$this->db->order_by('release_date desc');
-		$cds = $this->db->get('cd');
-		$cds_result = $cds->result_array();// I had to add this to make it work now. It was just returning $query. I guess it's a mysqli/new-CI-version issue
-
+		$cd_table = $this->get_cd_table();
+		$cds = $this->db->get($cd_table);
+		$cds_result = $cds->result_array();
+		
 		$this->db->order_by('song_number asc');
 		$songs = $this->db->get('song');
-		$songs_result = $songs->result_array();// I had to add this to make it work now. It was just returning $query. I guess it's a mysqli/new-CI-version issue
+		$songs_result = $songs->result_array();
 		
 		$results = array();
 		
@@ -52,48 +58,28 @@ class Cd_model extends CI_Model {
 		return $results;
 	}
 
-	function get_with_limit($limit, $offset, $order_by) {
-		$table = $this->get_table();
-		$this->db->limit($limit, $offset);
-		$this->db->order_by($order_by);
-		$query = $this->db->get($table);
-		return $query;
-	}
+	function _insert_cd($image_data) {
 
-	function get_where($id) {
-		$table = $this->get_table();
-		$this->db->where('id', $id);
-		$query = $this->db->get($table);
-		return $query;
-	}
-
-	function get_where_custom($col, $value) {
-		$table = $this->get_table();
-		$this->db->where($col, $value);
-		$query = $this->db->get($table);
-		return $query;
-	}
-
-	function _insert($image_data) {
-
-		$image_name	= $image_data['file_name'];
-		$cd_title = $this->input->post('title');
-		$price = $this->input->post('price');
-		$release_date = $this->input->post('release_date');
-		$total_songs = $this->input->post('total_songs');
-		$description = $this->input->post('description');
+		$image_name		= $image_data['file_name'];
+		$cd_title 		= $this->input->post('title');
+		$price 			= $this->input->post('price');
+		$release_date 	= $this->input->post('release_date');
+		$total_songs 	= $this->input->post('total_songs');
+		$description 	= $this->input->post('description');
 
 		$song_data = array();
 
 		for($i = 0; $i < $total_songs; $i++)
 		{
-			$song_title = $this->input->post('song_'.$i + 1);
-			$clip_name = $_FILES[$i]['name'];
+			$song_title = $this->input->post('song_'.($i + 1));
+			$song_number = ($i + 1);
+			$clip_name = $_FILES['song_clip_'.($i + 1)]['name'];
 
  			$song_data[$i] = array(
 
  				'song_title' 	=> (!empty($song_title)) ? $song_title : null,
- 				'clip_name'		=> (!empty($clip_name)) ? $clip_name : null,
+ 				'song_number'	=> (!empty($song_number)) ? $song_number : null,
+ 				'clip_name'		=> (!empty($clip_name)) ? $clip_name : null
 			);
 		}
 
@@ -109,56 +95,43 @@ class Cd_model extends CI_Model {
 			'description'	=> (!empty($description)) ? $description : null
 		);
 
-		$table = $this->get_table();
-		
-		if($this->db->insert($table, $cd_data))
+		$cd_table = $this->get_cd_table();
+		$song_table = $this->get_song_table();
+
+		$this->db->trans_start();
+
+			$this->db->insert($cd_table, $cd_data);
+
+			$cd_id = $this->db->insert_id();
+
+			foreach($song_data as $row){
+
+				$row['cd_id'] = null;//$cd_id;	
+				$this->db->insert($song_table, $row);
+			}
+
+		$this->db->trans_complete();
+
+		if($this->db->trans_status() === FALSE)
 		{
-			return true;
+			unlink(FCPATH. "images/cds/". $image_name);
+			return false;
 		}
 		else
 		{
-			return false;
+			return true;
 		}
 	}
 
-	function _update($id, $data) {
-		$table = $this->get_table();
+	function _update_cd($id, $data) {
+		$cd_table = $this->get_cd_table();
 		$this->db->where('id', $id);
-		$this->db->update($table, $data);
+		$this->db->update($cd_table, $data);
 	}
 
-	function _delete($id) {
-		$table = $this->get_table();
+	function _delete_cd($id) {
+		$cd_table = $this->get_cd_table();
 		$this->db->where('id', $id);
-		$this->db->delete($table);
+		$this->db->delete($cd_table);
 	}
-
-	function count_where($column, $value) {
-		$table = $this->get_table();
-		$this->db->where($column, $value);
-		$query = $this->db->get($table);
-		$num_rows = $query->num_rows();
-		return $num_rows;
-	}
-
-	function count_all() {
-		$table = $this->get_table();
-		$query = $this->db->get($table);
-		$num_rows = $query->num_rows();
-		return $num_rows;
-	}
-
-	function get_max() {
-		$table = $this->get_table();
-		$this->db->select_max('id');
-		$query = $this->db->get($table);
-		$row = $query->row();
-		$id = $row->id;
-		return $id;
-	}
-
-	function _custom_query($mysql_query) {
-		$query = $this->db->query($mysql_query);
-		return $query;
-		}
 }

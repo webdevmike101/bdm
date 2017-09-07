@@ -18,7 +18,7 @@ class Edit_schedule extends CI_Controller {
 		$data['title'] = "Edit Schedule";
 		$this->load->view('admin_header_view', $data);
 		$this->load->model('Schedule_model');
-		$upcomingPerformanceData['performances'] = $this->Schedule_model->get('date');
+		$upcomingPerformanceData['performances'] = $this->Schedule_model->get_performance('date');
 		$this->load->view('edit_schedule_view', $upcomingPerformanceData);
 	}
 

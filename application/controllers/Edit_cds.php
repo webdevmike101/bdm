@@ -16,6 +16,8 @@ class Edit_cds extends CI_Controller {
 	public function index()
 	{		
 		$data['title'] = "Edit CDs";
+		$this->load->model('cd_model');
+		$data['cds'] = $this->cd_model->get_cd();
 		$this->load->view('admin_header_view', $data);
 		$this->load->view('edit_cds_view');
 	}
@@ -42,13 +44,14 @@ class Edit_cds extends CI_Controller {
 		/////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
 
-		// // Validate all form input. //////////////////////////////////////////////////////
+		// Set rules for all form input alidation////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('title', 'The Title', 'required');
 		$this->form_validation->set_rules('price', 'The Price', 'required');
 		$this->form_validation->set_rules('release_date', 'The Release Date', 'required');
 		$this->form_validation->set_rules('total_songs', 'The Total Number of Songs', 'required|numeric');
+		$this->form_validation->set_rules('description', 'The Description', 'required');
 
 		for($i = 1; $i <= $num_songs; $i++)
 		{
@@ -60,50 +63,39 @@ class Edit_cds extends CI_Controller {
 			}
 		}
 
-		$this->form_validation->set_rules('description', 'The Description', 'required');
-
-		// The CI userfile never validates, so I have to check $_FILES['userfile']['name'] and
-		// only set the validation rule for userfile if $_FILES['userfile']['name']) is empty.
+		// The CI 'userfile' never validates, so I have to check $_FILES['userfile']['name'] and only set the 
+		// validation rule for 'userfile' (or in this case, cd_image) if $_FILES['userfile']['name']) is empty.
+		// The Library function 'upload' does its own validation, but I want to display all
+		// errors to the user at once, and this happens before the image upload.
 		if(empty($_FILES['cd_image']['name']))
 		{
 			$this->form_validation->set_rules('cd_image', 'An Image of the CD', 'required');
 			$this->form_validation->set_message('required', '%s is required.');
-		};
-		/////////////////////////////////////////////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
+		}
 
  		// If the form vaildates, insert the CD information. Image first ////////////////////
  		/////////////////////////////////////////////////////////////////////////////////////
 		if($this->form_validation->run())
 		{
-			// Set up the image upload configuration.
+
 			$uploadConfig = array(
 				'image_library' => 'GD2',
 				'upload_path'	=> 'images/cds/',
 				'allowed_types'	=> 'gif|jpg|jpeg|png'
 			);
 
-			// Upload the CD image to the images folder ///////////////////////////////////////
 			$this->load->library('upload', $uploadConfig);
 
-			// If the image upload is successful, insert the CD information. //////////////////
-			if($this->upload->do_upload('cd_image')) // The CI do_upload function already looks for "userfile" as passed from the view.
+			if($this->upload->do_upload('cd_image'))
 			{
-				// Get the image data for the image_path value in the insert
 				$image_data = $this->upload->data();
 
 				$this->load->model('cd_model'	);
 
-				// Insert the CD information.
-				// If the insert fails, set the errors key in $_SESSION. ///////////////////////
 				if(!$this->cd_model->_insert($image_data))
 				{
-					$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";	
+					$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";
 				}
-				else
-				{
-					
-				}	
 			}
 			else
 			{
@@ -115,8 +107,6 @@ class Edit_cds extends CI_Controller {
 			$_SESSION['errors'] = validation_errors();
 		}
 
-		// If there was any problem at all with the insert or file upload, ///////////////
-		// send the user's input back to re-populate the input fields. ////////////////////
 		if($_SESSION['errors'])
 		{
 			$_SESSION['title'] = $this->input->post('title');

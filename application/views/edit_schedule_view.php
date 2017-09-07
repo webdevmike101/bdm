@@ -2,7 +2,7 @@
 		<div id="edit-schedule-div">
 			<h1>Insert Performance</h1>
 			<div id="edit-schedule-container">
-				<div id="es-left">
+				<div id="edit-schedule-left">
 					<?php 
 
 						//session_start();
@@ -69,8 +69,8 @@
 							}	
 						?>
 					</div><!-- end #errors -->
-				</div><!-- end #es-left -->
-				<div id="es-right">
+				</div><!-- end #edit-schedule-left -->
+				<div id="edit-schedule-right">
 					<div id="up-div">
 						<table>
 							<tbody id="upcoming-performances-listing">
@@ -155,7 +155,7 @@
 							<button value="Delete" style="background: #f00; color: #fff; padding: 5px" id="" onclick="deletePerformance()">Delete</button>
 						</div>
 					</div><!-- end #details-div -->					
-				</div><!-- end #es-right -->
+				</div><!-- end #edit-schedule-right -->
 			</div><!-- end #edit-schedule-container -->
 		</div><!-- end #edit-schedule-div -->
 		<div id="hr-div"><hr /></div>

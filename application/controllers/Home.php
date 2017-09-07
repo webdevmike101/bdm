@@ -8,7 +8,7 @@ class Home extends CI_Controller {
 		$this->load->view('header_view', $data);
 
 		$this->load->model('Schedule_model');
-		$upcomingPerformanceData['performances'] = $this->Schedule_model->get('date');
+		$upcomingPerformanceData['performances'] = $this->Schedule_model->get_performance('date');
 		$this->load->view('home_view', $upcomingPerformanceData);
 
 		$this->load->view('footer_view');

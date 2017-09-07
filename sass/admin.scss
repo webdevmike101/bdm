@@ -63,8 +63,6 @@
     }
 }
 
-
-
 #admin-nav{
     width: 695px;
     margin-top: 10px;
@@ -112,7 +110,7 @@
     margin: 0 auto;
 }
 
-#es-left{
+#edit-schedule-left{
     width: 460px;
     height: 360px;
     padding: 20px;
@@ -120,7 +118,7 @@
     /*border: 1px solid black;*/
 }
 
-#es-right{
+#edit-schedule-right{
     width: 500px;
     height: 400px;
     float: left;
@@ -147,6 +145,47 @@
         font-size: 14px;
     }
    
+}
+
+#edit-cds-container{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+
+#edit-cds-left{
+    /*float: left;*/
+}
+
+#edit-cds-right{
+    /*float: left;*/
+}
+
+#edit-cd-image{
+    grid-area: image;
+}
+
+#edit-cd-details{
+    grid-area: details;
+}
+
+#edit-cd-description{
+    grid-area: description;
+}
+
+.edit-cds-cd-list-div{
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: auto;
+    grid-template-areas:
+
+        "image details"
+        "description description";
+    
+
+    ul{
+        list-style: none;
+    }
 }
 
 #enterSongTitles{
