@@ -60,6 +60,7 @@ class Cd_model extends CI_Model {
 
 	function _insert_cd($image_data) {
 
+		// Get the input from POST
 		$image_name		= $image_data['file_name'];
 		$cd_title 		= $this->input->post('title');
 		$price 			= $this->input->post('price');
@@ -68,7 +69,6 @@ class Cd_model extends CI_Model {
 		$description 	= $this->input->post('description');
 
 		$song_data = array();
-
 		for($i = 0; $i < $total_songs; $i++)
 		{
 			$song_title = $this->input->post('song_'.($i + 1));
@@ -86,7 +86,7 @@ class Cd_model extends CI_Model {
 		$cd_data = array(
 
 			// If the input is empty set it to null or there will be an empty
-			// entry in the database. /////////////////////////////////////////
+			// entry in the database.
 			'image_name'	=> (!empty($image_name)) ? $image_name : null,
 			'cd_title'		=> (!empty($cd_title)) ? $cd_title : null,
 			'price'			=> (!empty($price)) ? $price : null,
@@ -106,7 +106,7 @@ class Cd_model extends CI_Model {
 
 			foreach($song_data as $row){
 
-				$row['cd_id'] = null;//$cd_id;	
+				$row['cd_id'] = $cd_id;	
 				$this->db->insert($song_table, $row);
 			}
 

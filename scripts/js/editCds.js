@@ -13,10 +13,6 @@ $(document).ready(function(){
 
 	});
 
-
-
-	
-
 	// Disable the enter key to avoid prematurely submitting the form
 	$('.form_input').keypress(function(event){
 		if(event.which == 13 || event.which == 10){
@@ -24,7 +20,48 @@ $(document).ready(function(){
 			alert("Please use the Tab key.");
 		}
 	});
+
+	$('.edit-cd-image').on('click', function($this){
+
+		var title = $(this).siblings().first().children('ul').children('li').eq(0).text();
+		var price = $(this).siblings().first().children('ul').children('li').eq(1).text();
+		var releaseDate = $(this).siblings().first().children('ul').children('li').eq(2).text();
+		var totalSongs = ($(this).siblings().first().children('ol').children('li:last').index()) + 1;
+		var description = $(this).siblings().last().children('p').text();
+
+		$('#add-edit').text("Edit " + title);
+		// $('#enterSongTitles').hide();
+		$('input[name="upload"]').hide();
+		$('#delete-cancel-btns').css({visibility: 'show'});
+		$('#input_title').val(title);
+		$('#input_price').val(price);
+		$('#input_release_date').val(releaseDate);
+		$('#input_total_songs').val(totalSongs);
+		$('#input_description').val(description);
+
+		// This if is just to make sure that enterSongTitle completes before the
+		// song-title-inputs are populated.
+		if(enterSongTitle()){
+
+			for(var i = 1; i <= totalSongs; i++ ){
+
+				$('#song-title-input-' + i).val($(this).siblings().first().children('ol').children('li').eq(i - 1).text());
+			}
+		};
+	});
 });
+
+function cancelUpdate(e){
+
+
+	$('#cd-form')[0].reset();
+	$('#input_total_songs').val(parseInt(0));
+	enterSongTitle();
+	$('#input_total_songs').val("");
+	$('input[name="upload"]').show();
+	$('#delete-cancel-btns').css({visibility: 'hidden'});
+
+}
 
 function insertCD(){
 
@@ -122,7 +159,7 @@ function enterSongTitle(){
 				changeInTotal = parseInt(newTotal)  - parseInt(total_songs);
 				var oldTotal = parseInt(total_songs);
 				total_songs = parseInt(total_songs)  + parseInt(changeInTotal) ;
-				alert("old total = " + oldTotal + " change in total = " + changeInTotal);
+				// alert("old total = " + oldTotal + " change in total = " + changeInTotal);
 				for(i = 1; i <= changeInTotal; i++){
 					$("#song-input-div").append("<div class='song-title-div' id='song-title-div-" + (oldTotal + i) + "'>"+
 													"<label>Song " + (oldTotal + i) + "</label>&nbsp;"+
@@ -141,6 +178,10 @@ function enterSongTitle(){
 	 	alert("Please enter a valid number of songs.");
 		// entry = undefined;
 	}
+
+	// This return is just here for the if(enterSongTitle) statement above
+	// that ensures enterSongTitle completes before the script moves on.
+	return true;
 }
 
 function checkForNumbersOnly (numberOfSongs) {

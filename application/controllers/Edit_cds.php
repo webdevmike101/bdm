@@ -88,11 +88,15 @@ class Edit_cds extends CI_Controller {
 
 			if($this->upload->do_upload('cd_image'))
 			{
+				// I need the image data to get the name of the CD image after it is uploaded.
+				// I could get it from the POST, but if for some reason the user uploads an
+				// image with the same name as one already in the images folder, the new image
+				// will have a 1 added to the name which will make the "<image src=" incorrect. 
 				$image_data = $this->upload->data();
 
-				$this->load->model('cd_model'	);
+				$this->load->model('cd_model');
 
-				if(!$this->cd_model->_insert($image_data))
+				if(!$this->cd_model->_insert_cd($image_data))
 				{
 					$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";
 				}

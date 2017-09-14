@@ -696,8 +696,27 @@ li div {
     margin-left: 15px; }
 
 #submit-btn-div input {
-  background: #12AB0A;
+  background: #0f0;
   color: #fff;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px; }
+#submit-btn-div #update-btn {
+  background: #00f;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px; }
+#submit-btn-div #delete-btn {
+  background: #f00;
+  color: #fff;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px; }
+#submit-btn-div #cancel-btn {
+  background: #0f0;
+  color: #fff;
+  font-weight: bold;
   padding: 5px;
   font-size: 14px; }
 
@@ -712,13 +731,13 @@ li div {
 #edit-cds-right {
   /*float: left;*/ }
 
-#edit-cd-image {
+.edit-cd-image {
   grid-area: image; }
 
-#edit-cd-details {
+.edit-cd-details {
   grid-area: details; }
 
-#edit-cd-description {
+.edit-cd-description {
   grid-area: description; }
 
 .edit-cds-cd-list-div {
@@ -732,6 +751,7 @@ li div {
 #enterSongTitles {
   background: blue;
   color: #fff;
+  font-weight: bold;
   padding: 5px;
   font-size: 14px; }
 
@@ -766,8 +786,10 @@ textarea {
 
 #upload-btn-div input {
   background: #0f0;
-  color: #000;
-  padding: 5px; }
+  color: #fff;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px; }
 
 #updated {
   padding-left: 170px;

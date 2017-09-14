@@ -102,8 +102,9 @@
 						<!-- <button onclick="doItAgain()">Click Me</button> -->
 						<p id="updated">Updated</p>
 					</div><!-- end #upcoming-performances-div -->
-					<hr/>
+					<hr style="margin-bottom: 0" />
 					<div id="details-div">
+						<h3 style="text-align: center; margin-top: 0">Edit Performance Details</h3>
 						<table style="margin-left: 40px">
 							<tr>
 								<th class="city-heading">City</th>
@@ -150,9 +151,9 @@
 						<input type="hidden" id="hiddenId">
 						<div style="padding-left: 40px">
 							<!-- Update Button -->
-							<button value="Update" style="background: #00f; color: #fff; padding: 5px" id="" onclick="updateSchedule()">Update</button>
+							<button value="Update" style="background: #00f; color: #fff; font-weight: bold; padding: 5px; font-size: 14px;" id="" onclick="updateSchedule()">Update</button>
 							<!-- Delete Button -->
-							<button value="Delete" style="background: #f00; color: #fff; padding: 5px" id="" onclick="deletePerformance()">Delete</button>
+							<button value="Delete" style="background: #f00; color: #fff; font-weight: bold; padding: 5px; font-size: 14px;" id="" onclick="deletePerformance()">Delete</button>
 						</div>
 					</div><!-- end #details-div -->					
 				</div><!-- end #edit-schedule-right -->

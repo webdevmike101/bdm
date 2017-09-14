@@ -139,8 +139,33 @@
 #submit-btn-div{
 
     input{
-        background: #12AB0A;                                                                                                              ;
+        background: #0f0;                                                                                                              ;
         color: #fff;
+        font-weight: bold;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    #update-btn{
+        background: #00f;                                                                                                              ;
+        color: #fff;
+        font-weight: bold;
+        padding: 5px;
+        font-size: 14px;
+    }    
+
+    #delete-btn{
+        background: #f00;                                                                                                              ;
+        color: #fff;
+        font-weight: bold;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    #cancel-btn{
+        background: #0f0;                                                                                                              ;
+        color: #fff;
+        font-weight: bold;
         padding: 5px;
         font-size: 14px;
     }
@@ -161,15 +186,15 @@
     /*float: left;*/
 }
 
-#edit-cd-image{
+.edit-cd-image{
     grid-area: image;
 }
 
-#edit-cd-details{
+.edit-cd-details{
     grid-area: details;
 }
 
-#edit-cd-description{
+.edit-cd-description{
     grid-area: description;
 }
 
@@ -191,6 +216,7 @@
 #enterSongTitles{
     background: blue;
     color: #fff;
+    font-weight: bold;
     padding: 5px;
     font-size: 14px;
 }
@@ -247,9 +273,11 @@ input{
 #upload-btn-div{
 
     input{
-        background: #0f0;
-        color: #000;
-        padding: 5px
+        background: #0f0;                                                                                                              ;
+        color: #fff;
+        font-weight: bold;
+        padding: 5px;
+        font-size: 14px;
     }
    
 }

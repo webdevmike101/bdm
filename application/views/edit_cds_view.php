@@ -6,7 +6,7 @@
 			<div id="edit-cds-left" class="form">
 				<?php 
 
-					echo form_open_multipart("edit_cds/insert_cd");
+					echo form_open_multipart('edit_cds/insert_cd', 'id="cd-form"');
 
 					$title = array(
 						'name'		=> 'title',
@@ -41,7 +41,9 @@
 					$description = array(
 						'name'		=> 'description',
 						'id'		=> 'input_description',
-						'class'		=> 'form_input'
+						'class'		=> 'form_input',
+						'rows'		=> '5',
+						'cols'		=> '50'
 						);
 
 					$cd_image = array(
@@ -67,7 +69,7 @@
 					}
 								
 				?>
-				<h1>Edit CD's</h1>
+				<h1 id="add-edit">Add New CD</h1>
 		
 				<!-- Get the CD Tilte -->
 				<div>
@@ -117,8 +119,8 @@
 
 				<!-- Get the Description of the CD -->
 				<div>
-					<?=form_label('Description:', 'description')?>
-					<?=form_input($description, $sd)?>
+					<?=form_label('Description:', 'description')?></br>
+					<?=form_textarea($description, $sd)?>
 				</div><br/>
 
 				<!-- Upload an Image of the CD -->
@@ -130,6 +132,11 @@
 				<!-- Submit the Form -->
 				<div id="submit-btn-div">
 					<?php echo form_submit('upload', "Upload"); ?>
+					<span id="delete-cancel-btns" style="visibility: hidden">
+					<button type="button" id="update-btn" onclick="updateCd()">Update</button>
+					<button type="button" id="cancel-btn" onclick="cancelUpdate()">Cancel</button>
+					<button type="button" id="delete-btn" onclick="deleteCd()" style="margin-left: 140px">Delete</button>
+					</span>
 				</div><br/>
 
 				<!-- Dissplay any Errors -->
@@ -182,22 +189,23 @@
 
 
 
-
+					<p style="color: green; font-weight: bold; font-size: 18px; text-align: center; margin-bottom: 30px">Click a CD to edit the details</p>
 
 
 					<?php foreach($cds as $cd): ?>
 					<div class="edit-cds-cd-list-div">
 							
-						<div id="edit-cd-image">
+						<div class="edit-cd-image">
 							<div class="black">
 								<img src="images/cds/<?php echo $cd['image_name']; ?>" height="230" width="230">
 							</div>
 
 						</div>
-						<div id="edit-cd-details">
+						<div class="edit-cd-details">
 							<ul>
 								<li><?php echo $cd['cd_title']; ?></li>
 								<li><?php echo "$". $cd['price']; ?></li>
+								<li><?php echo $cd['release_date']; ?></li>
 							</ul>
 							<ol>			
 								
@@ -210,7 +218,7 @@
 							
 							
 						</div><!-- end cdListingDiv-->
-						<div id="edit-cd-description">
+						<div class="edit-cd-description">
 							<p><?php echo $cd['description']; ?></p>
 						</div>
 						
