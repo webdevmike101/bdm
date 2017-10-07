@@ -1,6 +1,8 @@
 // Mike Guillory
 // Credo Web Development
-// 201709041
+// 20171003
+
+var actionInsert = $('form').attr('action');
 
 $(document).ready(function(){
 
@@ -21,7 +23,8 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.edit-cd-image').on('click', function($this){
+	// Update the CD
+	$('.edit-cd-image').on('click', function(){
 
 		var title = $(this).siblings().first().children('ul').children('li').eq(0).text();
 		var price = $(this).siblings().first().children('ul').children('li').eq(1).text();
@@ -29,15 +32,25 @@ $(document).ready(function(){
 		var totalSongs = ($(this).siblings().first().children('ol').children('li:last').index()) + 1;
 		var description = $(this).siblings().last().children('p').text();
 
+		var id = $(this).attr('id');
+
+		action = actionInsert;
+		action = action.split('insert_cd'); 
+		action = action.reverse();
+		action = action.pop();
+		actionUpdate = action + "update_cd";;
+
 		$('#add-edit').text("Edit " + title);
-		// $('#enterSongTitles').hide();
-		$('input[name="upload"]').hide();
-		$('#delete-cancel-btns').css({visibility: 'show'});
-		$('#input_title').val(title);
+		$('#enterSongTitles').val("Edit Number of Songs");
+		$('input[name="submit-btn"]').css('background', '#f00').val("Update");
+		$('#delete-cancel-btns-span').css({visibility: 'show'});
+		$('#input_title').attr('value', title);
 		$('#input_price').val(price);
 		$('#input_release_date').val(releaseDate);
 		$('#input_total_songs').val(totalSongs);
 		$('#input_description').val(description);
+		$('form').attr('action', actionUpdate);
+		$('#cd-id').val(id);
 
 		// This if is just to make sure that enterSongTitle completes before the
 		// song-title-inputs are populated.
@@ -46,6 +59,7 @@ $(document).ready(function(){
 			for(var i = 1; i <= totalSongs; i++ ){
 
 				$('#song-title-input-' + i).val($(this).siblings().first().children('ol').children('li').eq(i - 1).text());
+				$('#hidden-song-clip-input-' +i).val($(this).siblings().first().children('ol').children('li').eq(i - 1).attr('id'));
 			}
 		};
 	});
@@ -58,8 +72,13 @@ function cancelUpdate(e){
 	$('#input_total_songs').val(parseInt(0));
 	enterSongTitle();
 	$('#input_total_songs').val("");
-	$('input[name="upload"]').show();
-	$('#delete-cancel-btns').css({visibility: 'hidden'});
+	$('input[name="submit-btn"]').css({background: '#0f0'}).val("Upload");
+	$('#delete-cancel-btns-span').css({visibility: 'hidden'});
+	$('form').attr('action', actionInsert);
+
+}
+
+function deleteCd(){
 
 }
 
@@ -136,6 +155,7 @@ function enterSongTitle(){
 												"<br/><div>"+
 													"<label>Song Clip</label>"+
 													"<input type='file' class='form_input' id='song-clip-input-" + i + "' name='song_clip_" + i + "' />"+
+													"<input type='hidden' class='form_input' id='hidden-song-clip-input-" + i + "' name='hidden_song_clip_" + i + "' />"+
 													"</div>"+
 												"</div>");
 			}
@@ -167,6 +187,7 @@ function enterSongTitle(){
 													"<br/><div>"+
 													"<label>Song Clip</label>"+
 													"<input type='file' class='form_input' id='song-clip-input-" + i + "' name='song_clip_" + i + "' />"+
+													"<input type='hidden' class='form_input' id='hidden-song-clip-input-" + i + "' name='hidden_song_clip_" + i + "' />"+
 													"</div>"+
 												"</div>");
 				}	

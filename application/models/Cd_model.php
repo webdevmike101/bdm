@@ -60,41 +60,8 @@ class Cd_model extends CI_Model {
 
 	function _insert_cd($image_data) {
 
-		// Get the input from POST
-		$image_name		= $image_data['file_name'];
-		$cd_title 		= $this->input->post('title');
-		$price 			= $this->input->post('price');
-		$release_date 	= $this->input->post('release_date');
-		$total_songs 	= $this->input->post('total_songs');
-		$description 	= $this->input->post('description');
-
-		$song_data = array();
-		for($i = 0; $i < $total_songs; $i++)
-		{
-			$song_title = $this->input->post('song_'.($i + 1));
-			$song_number = ($i + 1);
-			$clip_name = $_FILES['song_clip_'.($i + 1)]['name'];
-
- 			$song_data[$i] = array(
-
- 				'song_title' 	=> (!empty($song_title)) ? $song_title : null,
- 				'song_number'	=> (!empty($song_number)) ? $song_number : null,
- 				'clip_name'		=> (!empty($clip_name)) ? $clip_name : null
-			);
-		}
-
-		$cd_data = array(
-
-			// If the input is empty set it to null or there will be an empty
-			// entry in the database.
-			'image_name'	=> (!empty($image_name)) ? $image_name : null,
-			'cd_title'		=> (!empty($cd_title)) ? $cd_title : null,
-			'price'			=> (!empty($price)) ? $price : null,
-			'release_date'	=> (!empty($release_date)) ? $release_date : null,
-			'total_songs'	=> (!empty($total_songs)) ? $total_songs : null,
-			'description'	=> (!empty($description)) ? $description : null
-		);
-
+		$cd_data = $this->cdDataFromPost($image_data);
+		$song_data = $this->songDataFromPost();
 		$cd_table = $this->get_cd_table();
 		$song_table = $this->get_song_table();
 
@@ -123,15 +90,68 @@ class Cd_model extends CI_Model {
 		}
 	}
 
-	function _update_cd($id, $data) {
-		$cd_table = $this->get_cd_table();
-		$this->db->where('id', $id);
-		$this->db->update($cd_table, $data);
+	function _update_cd(){//$id, $data) {
+		// $cd_table = $this->get_cd_table();
+		// $this->db->where('id', $id);
+		// $this->db->update($cd_table, $data);
+		var_dump($_FILES);
 	}
 
 	function _delete_cd($id) {
 		$cd_table = $this->get_cd_table();
 		$this->db->where('id', $id);
 		$this->db->delete($cd_table);
+	}
+
+	function songDataFromPost(){
+
+		// Get the input from POST
+		$total_songs 	= $this->input->post('total_songs');
+
+		$song_data = array();
+		for($i = 0; $i < $total_songs; $i++)
+		{
+			$song_title = $this->input->post('song_'.($i + 1));
+			$song_number = ($i + 1);
+			$clip_name = $_FILES['song_clip_'.($i + 1)]['name'];
+
+ 			$song_data[$i] = array(
+
+ 				'song_title' 	=> (!empty($song_title)) ? $song_title : null,
+ 				'song_number'	=> (!empty($song_number)) ? $song_number : null,
+ 				'clip_name'		=> (!empty($clip_name)) ? $clip_name : null
+			);
+		}
+
+		return $song_data;
+	}
+
+		function cdDataFromPost($image_data){
+
+		// Get the input from POST
+		// I need the image data to get the name of the CD image after it is uploaded.
+		// I could get it from the POST, but if for some reason the user uploads an
+		// image with the same name as one already in the images folder, the new image
+		// will have a 1 added to the name which will make the "<image src=" incorrect. 
+		$image_name		= $image_data['file_name'];
+		$cd_title 		= $this->input->post('title');
+		$price 			= $this->input->post('price');
+		$release_date 	= $this->input->post('release_date');
+		$total_songs 	= $this->input->post('total_songs');
+		$description 	= $this->input->post('description');
+
+		$cd_data = array(
+
+			// If the input is empty set it to null or there will be an empty
+			// entry in the database.
+			'image_name'	=> (!empty($image_name)) ? $image_name : null,
+			'cd_title'		=> (!empty($cd_title)) ? $cd_title : null,
+			'price'			=> (!empty($price)) ? $price : null,
+			'release_date'	=> (!empty($release_date)) ? $release_date : null,
+			'total_songs'	=> (!empty($total_songs)) ? $total_songs : null,
+			'description'	=> (!empty($description)) ? $description : null
+		);
+
+		return $cd_data;
 	}
 }

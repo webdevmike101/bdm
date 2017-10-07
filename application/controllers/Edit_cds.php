@@ -1,6 +1,7 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Edit_cds extends CI_Controller {
+class Edit_cds extends CI_Controller 
+{
 
 	function __construct()
 	{
@@ -16,83 +17,53 @@ class Edit_cds extends CI_Controller {
 	public function index()
 	{		
 		$data['title'] = "Edit CDs";
-		$this->load->model('cd_model');
-		$data['cds'] = $this->cd_model->get_cd();
+		$this->load->model('Cd_model');
+		$data['cds'] = $this->Cd_model->get_cd();
 		$this->load->view('admin_header_view', $data);
 		$this->load->view('edit_cds_view');
 	}
 
 	function insert_cd()
 	{
-		// Unset previous errors if there were any, so if there are none ////////////////////
-		// this time, there won't be errors carried over in $_SESSION. //////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
-		unset($_SESSION['errors']);
-		unset($_SESSION['title']);
-		unset($_SESSION['price']);
-		unset($_SESSION['release_date']);
-		unset($_SESSION['description']);
+		$action = "insert";
+		$this->setValidationRules($action);
 
-		$num_songs = $this->input->post('total_songs');
-
-		for($i = 1; $i <= $num_songs; $i++)
-		{
-			unset($_SESSION['song_'.$i]);
-		}
-
-		unset($_SESSION['total_songs']);
-		/////////////////////////////////////////////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
-
-		// Set rules for all form input alidation////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('title', 'The Title', 'required');
-		$this->form_validation->set_rules('price', 'The Price', 'required');
-		$this->form_validation->set_rules('release_date', 'The Release Date', 'required');
-		$this->form_validation->set_rules('total_songs', 'The Total Number of Songs', 'required|numeric');
-		$this->form_validation->set_rules('description', 'The Description', 'required');
-
-		for($i = 1; $i <= $num_songs; $i++)
-		{
-			$this->form_validation->set_rules('song_'.$i, 'Song '.$i. " Title", 'required');
-
-			if(empty($_FILES['song_clip_'.$i]['name']))
-			{
-				$this->form_validation->set_rules('song_clip_'.$i, 'Song Clip '.$i, 'required');
-			}
-		}
-
-		// The CI 'userfile' never validates, so I have to check $_FILES['userfile']['name'] and only set the 
-		// validation rule for 'userfile' (or in this case, cd_image) if $_FILES['userfile']['name']) is empty.
-		// The Library function 'upload' does its own validation, but I want to display all
-		// errors to the user at once, and this happens before the image upload.
-		if(empty($_FILES['cd_image']['name']))
-		{
-			$this->form_validation->set_rules('cd_image', 'An Image of the CD', 'required');
-			$this->form_validation->set_message('required', '%s is required.');
-		}
+		$_SESSION['errors'] = "";
 
  		// If the form vaildates, insert the CD information. Image first ////////////////////
  		/////////////////////////////////////////////////////////////////////////////////////
 		if($this->form_validation->run())
 		{
 
-			$uploadConfig = array(
+			$imageUploadConfig = array(
 				'image_library' => 'GD2',
 				'upload_path'	=> 'images/cds/',
 				'allowed_types'	=> 'gif|jpg|jpeg|png'
 			);
 
-			$this->load->library('upload', $uploadConfig);
+			$this->load->library('upload', $imageUploadConfig);
 
-			if($this->upload->do_upload('cd_image'))
+			if($this->upload->do_upload('cd_image'))// cd_image is what codeigniter usualy refers to as userfile
 			{
 				// I need the image data to get the name of the CD image after it is uploaded.
 				// I could get it from the POST, but if for some reason the user uploads an
 				// image with the same name as one already in the images folder, the new image
 				// will have a 1 added to the name which will make the "<image src=" incorrect. 
 				$image_data = $this->upload->data();
+
+				// Prepare to upload song clips
+				$clipsUploadConfig = array(,
+					'upload_path'	=> 'music/clips/',
+					'allowed_types'	=> 'mp3'
+				);				
+
+				{
+					// **************** LEFT OFF HERE ******************************************************************************
+					// *************************************************************************************************************
+					// loop through all the song clips for uploading ***************************************************************
+					// *************************************************************************************************************
+					// *************************************************************************************************************
+				}
 
 				$this->load->model('cd_model');
 
@@ -127,5 +98,68 @@ class Edit_cds extends CI_Controller {
 		}
 
 		redirect('edit_cds');
+	}
+
+	function update_cd(){
+
+		// $this->load->model('cd_model');
+		// $this->cd_model->_update_cd();
+
+		var_dump($_REQUEST);
+			var_dump($_FILES);
+	}
+
+	function setValidationRules($action)
+	{
+		// Unset previous errors if there were any, so if there are none ////////////////////
+		// this time, there won't be errors carried over in $_SESSION. //////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
+		unset($_SESSION['errors']);
+		unset($_SESSION['title']);
+		unset($_SESSION['price']);
+		unset($_SESSION['release_date']);
+		unset($_SESSION['description']);
+
+		$num_songs = $this->input->post('total_songs');
+
+		for($i = 1; $i <= $num_songs; $i++)
+		{
+			unset($_SESSION['song_'.$i]);
+		}
+
+		unset($_SESSION['total_songs']);
+		/////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
+
+		// Set rules for all form input alidation////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('title', 'The Title', 'required');
+		$this->form_validation->set_rules('price', 'The Price', 'required');
+		$this->form_validation->set_rules('release_date', 'The Release Date', 'required');
+		$this->form_validation->set_rules('total_songs', 'The Total Number of Songs', 'required|numeric');
+		$this->form_validation->set_rules('description', 'The Description', 'required');
+
+		for($i = 1; $i <= $num_songs; $i++)
+		{
+			$this->form_validation->set_rules('song_'.$i, 'Song '.$i. " Title", 'required');
+
+			if($action == 'insert' && empty($_FILES['song_clip_'.$i]['name']))
+			{
+				$this->form_validation->set_rules('song_clip_'.$i, 'Song Clip '.$i, 'required');
+			}
+		}
+
+		// The CI 'userfile' never validates, so I have to check $_FILES['userfile']['name'] and only set the 
+		// validation rule for 'userfile' (or in this case, cd_image) if $_FILES['userfile']['name']) is empty.
+		// The Library function 'upload' does its own validation, but I want to display all
+		// errors to the user at once, and this happens before the image upload.
+		if($action == 'insert' && empty($_FILES['cd_image']['name']))
+		{
+			$this->form_validation->set_rules('cd_image', 'An Image of the CD', 'required');
+			$this->form_validation->set_message('required', '%s is required.');
+		}
+
+		return true;
 	}
 }

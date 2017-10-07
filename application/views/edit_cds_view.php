@@ -4,9 +4,11 @@
 	<div id="edit-cds-div">
 		<div id="edit-cds-container">
 			<div id="edit-cds-left" class="form">
+				<form id="cd-form" action="<?php echo base_url()."edit_cds/insert_cd"; ?>" method="POST" enctype="multipart/form-data">
+
 				<?php 
 
-					echo form_open_multipart('edit_cds/insert_cd', 'id="cd-form"');
+					// echo form_open_multipart('edit_cds/insert_cd', 'id="cd-form"');
 
 					$title = array(
 						'name'		=> 'title',
@@ -77,6 +79,8 @@
 					<?=form_input($title, $st)?>
 				</div><br/>
 
+				<input type="hidden" id="cd-id" name="cd_id" />
+
 				<!-- Get the CD Price -->
 				<div>
 					<?=form_label('Price: $', 'price')?>
@@ -102,19 +106,12 @@
 
 				<!-- Get the song titles -->
 				<div class="form_input" id="song-input-div" style="margin-left: 50px">
-					<?php if(isset($_SESSION['total_songs']) && $_SESSION['total_songs'] > 0): ?>
-						<input type="hidden" id="hidden-total-songs" value="<?=$sts?>" />
-						<?php for($i = 1; $i <= $_SESSION['total_songs']; $i++): ?>
-							<div class='song-title-div' id='song-title-div-<?=$i?>'>
-								<label>Song <?=$i?></label>
-								<input type='text' size='50' autocomplete='off' class='form_input' id='song-title-input-<?=$i?>' name='song_<?=$i?>' value='<?php echo($_SESSION["song_$i"]); ?>'/>
-								<br/><div>
-									<label>Song Clip</label>
-									<input type='file' class='form_input file_selection' id='song-clip-input-'<?=$i?> name='song_clip_<?=$i?>'/>
-								</div>
-							</div>
-						<?php endfor; ?>
-					<?php endif; ?>
+
+
+
+
+
+
 				</div><br/>
 
 				<!-- Get the Description of the CD -->
@@ -131,11 +128,11 @@
 
 				<!-- Submit the Form -->
 				<div id="submit-btn-div">
-					<?php echo form_submit('upload', "Upload"); ?>
-					<span id="delete-cancel-btns" style="visibility: hidden">
-					<button type="button" id="update-btn" onclick="updateCd()">Update</button>
-					<button type="button" id="cancel-btn" onclick="cancelUpdate()">Cancel</button>
-					<button type="button" id="delete-btn" onclick="deleteCd()" style="margin-left: 140px">Delete</button>
+					<?php echo form_submit('submit-btn', "Upload"); ?>
+					<span id="delete-cancel-btns-span" style="visibility: hidden">
+						<!-- <button type="button" id="update-btn" onclick="updateCd()">Update</button> -->
+						<button type="button" id="cancel-btn" onclick="cancelUpdate()">Cancel</button>
+						<!-- <button type="button" id="delete-btn" onclick="deleteCd()" style="margin-left: 140px">Delete</button> -->
 					</span>
 				</div><br/>
 
@@ -150,17 +147,6 @@
 						<!-- Set the text in the Choose file box to red to make it obvious that the user
 						     needs to reselect the file when there are errors ////////////////////////////// -->
 						<style type="text/css">.file_selection{color: red;}</style>
-
-						<!-- Display the errors //////////////////////////////////////////////////////////// -->
-						<script type='text/javascript'> 
-
-							var errors = $('#hidden-errors').val();
-							// remove the html tags from the errors so they don't show in the alert box. ///////
-							var errorsClean = errors.replace(/(<([^>]+)>)/ig,"");
-
-								alert(errorsClean);
-
-						</script>
 
 						<?php	
 							
@@ -194,11 +180,10 @@
 
 					<?php foreach($cds as $cd): ?>
 					<div class="edit-cds-cd-list-div">
-							
-						<div class="edit-cd-image">
-							<div class="black">
-								<img src="images/cds/<?php echo $cd['image_name']; ?>" height="230" width="230">
-							</div>
+						<div class="edit-cd-image" id="<?php echo $cd['cd_id']; ?>">
+							<!-- <div class="black"> -->
+								<img src="images/cds/<?php echo $cd['image_name']; ?>" class="black" height="230" width="230">
+							<!-- </div> -->
 
 						</div>
 						<div class="edit-cd-details">
@@ -210,7 +195,7 @@
 							<ol>			
 								
 								<?php for($i = 0; $i < $cd['total_songs']; ++$i): ?>
-									<li><?php echo $cd[$i]['song_title']; ?></li>
+									<li id="<?php echo $cd[$i]['clip_name']; ?>"><?php echo $cd[$i]['song_title']; ?></li>
 								<?php endfor; ?>
 							</ol>
 							
@@ -220,9 +205,9 @@
 						</div><!-- end cdListingDiv-->
 						<div class="edit-cd-description">
 							<p><?php echo $cd['description']; ?></p>
-						</div>
-						
+						</div>						
 					</div>
+					<hr style="margin: 0 0 20px 0;"></hr>
 					<?php endforeach; ?>
 
 
@@ -249,7 +234,22 @@
 	<!-- editCds.js must be loded after the page or the number of songs can't be changed after
 	     a failed upload without getting the song numbers out of whack. ////////////////////// -->
 	<script type="text/javascript" src="scripts/js/editCds.js"></script>
+
+	<!-- Display the errors //////////////////////////////////////////////////////////// -->
+	<script type='text/javascript'> 
+
+		var errors = $('#hidden-errors').val();
+		// remove the html tags from the errors so they don't show in the alert box. ///////
+		if(errors){
+			
+			var errorsClean = errors.replace(/(<([^>]+)>)/ig,"");
+
+			alert(errorsClean);		}
+
+	</script>
 	
+	<?php var_dump($cds); ?>
+
 <body>
 </html>
 
