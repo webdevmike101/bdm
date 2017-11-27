@@ -26,51 +26,70 @@ class Edit_cds extends CI_Controller
 	function insert_cd()
 	{
 		$action = "insert";
-		$this->setValidationRules($action);
-
 		$_SESSION['errors'] = "";
+		$cdTitle = strtolower($this->input->post('title'));
 
+		if(!is_dir('images/cds/'.$cdTitle))
+		{
+			mkdir('images/cds/'.$cdTitle);
+		}
+
+		$this->setValidationRules($action);
  		// If the form vaildates, insert the CD information. Image first ////////////////////
- 		/////////////////////////////////////////////////////////////////////////////////////
+ 		/////////////////////////////////////////////////////////////////////////////////
 		if($this->form_validation->run())
 		{
-
 			$imageUploadConfig = array(
 				'image_library' => 'GD2',
-				'upload_path'	=> 'images/cds/',
+				'upload_path'	=> 'images/cds/'.$cdTitle,
 				'allowed_types'	=> 'gif|jpg|jpeg|png'
 			);
 
-			$this->load->library('upload', $imageUploadConfig);
+			$this->load->library('upload', $imageUploadConfig, 'image_upload');
 
-			if($this->upload->do_upload('cd_image'))// cd_image is what codeigniter usualy refers to as userfile
+			if($this->image_upload->do_upload('cd_image'))// cd_image is what codeigniter usualy refers to as userfile
 			{
 				// I need the image data to get the name of the CD image after it is uploaded.
 				// I could get it from the POST, but if for some reason the user uploads an
 				// image with the same name as one already in the images folder, the new image
 				// will have a 1 added to the name which will make the "<image src=" incorrect. 
-				$image_data = $this->upload->data();
+				$image_data = $this->image_upload->data();
 
 				// Prepare to upload song clips
-				$clipsUploadConfig = array(,
-					'upload_path'	=> 'music/clips/',
+				if(!is_dir('music/clips/'.$cdTitle))
+				{
+					mkdir('music/clips/'.$cdTitle);
+				}
+
+				$clipsUploadConfig = array(
+					'upload_path'	=> 'music/clips/'.$cdTitle,
 					'allowed_types'	=> 'mp3'
 				);				
 
-				{
-					// **************** LEFT OFF HERE ******************************************************************************
-					// *************************************************************************************************************
-					// loop through all the song clips for uploading ***************************************************************
-					// *************************************************************************************************************
-					// *************************************************************************************************************
-				}
+				$this->load->library('upload', $clipsUploadConfig, 'clips_upload');
+				
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				////////////////////////CHANGE THIS TO UPLOAD MULTIPLE FILES////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				$this->load->model('cd_model');
-
-				if(!$this->cd_model->_insert_cd($image_data))
+				if($this->clips_upload->do_upload('song_clip_1'))
 				{
-					$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";
+					$this->load->model('cd_model');
+
+					if(!$this->cd_model->_insert_cd($image_data))
+					{
+						$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";
+					}
 				}
+				else
+				{
+					$_SESSION['errors'] = $this->upload->display_errors();
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+				////////////////////////CHANGE THIS TO UPLOAD MULTIPLE FILES////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////								
 			}
 			else
 			{
@@ -82,7 +101,7 @@ class Edit_cds extends CI_Controller
 			$_SESSION['errors'] = validation_errors();
 		}
 
-		if($_SESSION['errors'])
+		if(isset($_SESSION['errors']))
 		{
 			$_SESSION['title'] = $this->input->post('title');
 			$_SESSION['price'] = $this->input->post('price');
@@ -159,7 +178,5 @@ class Edit_cds extends CI_Controller
 			$this->form_validation->set_rules('cd_image', 'An Image of the CD', 'required');
 			$this->form_validation->set_message('required', '%s is required.');
 		}
-
-		return true;
 	}
 }

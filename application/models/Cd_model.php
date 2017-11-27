@@ -61,6 +61,9 @@ class Cd_model extends CI_Model {
 	function _insert_cd($image_data) {
 
 		$cd_data = $this->cdDataFromPost($image_data);
+		$image_name = $cd_data['image_name'];
+		$directory = strtolower($cd_data['cd_title']);
+		$image_path = $directory."/".$image_name;
 		$song_data = $this->songDataFromPost();
 		$cd_table = $this->get_cd_table();
 		$song_table = $this->get_song_table();
@@ -71,7 +74,8 @@ class Cd_model extends CI_Model {
 
 			$cd_id = $this->db->insert_id();
 
-			foreach($song_data as $row){
+			foreach($song_data as $row)
+			{
 
 				$row['cd_id'] = $cd_id;	
 				$this->db->insert($song_table, $row);
@@ -81,7 +85,17 @@ class Cd_model extends CI_Model {
 
 		if($this->db->trans_status() === FALSE)
 		{
-			unlink(FCPATH. "images/cds/". $image_name);
+			unlink(FCPATH. "images/cds/". $image_path);
+			rmdir(FCPATH. 'images/cds/'. $image_directory);
+
+			foreach($song_data as $row)
+			{
+
+				unlink(FCPATH. "music/clips/". $directory. "/". $row['clip_name']);
+			}
+
+			rmdir(FCPATH. "music/clips/". $directory);
+
 			return false;
 		}
 		else
@@ -94,7 +108,7 @@ class Cd_model extends CI_Model {
 		// $cd_table = $this->get_cd_table();
 		// $this->db->where('id', $id);
 		// $this->db->update($cd_table, $data);
-		var_dump($_FILES);
+		// var_dump($_FILES);
 	}
 
 	function _delete_cd($id) {

@@ -1,6 +1,18 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access'); ?>	
 	<!-- <script type="text/javascript" src="scripts/js/editCds.js"></script> -->
 	<!-- <script type="text/javascript" src="scripts/js/lib/jquery-1.11.0.min.js"></script> -->
+
+	<?php
+
+		if(isset($_FILES['name']))
+		{
+			var_dump($_FILES);
+		}
+
+
+	?>
+
+
 	<div id="edit-cds-div">
 		<div id="edit-cds-container">
 			<div id="edit-cds-left" class="form">
@@ -107,10 +119,7 @@
 				<!-- Get the song titles -->
 				<div class="form_input" id="song-input-div" style="margin-left: 50px">
 
-
-
-
-
+					<!--  editCds.js -->
 
 				</div><br/>
 
@@ -182,7 +191,12 @@
 					<div class="edit-cds-cd-list-div">
 						<div class="edit-cd-image" id="<?php echo $cd['cd_id']; ?>">
 							<!-- <div class="black"> -->
-								<img src="images/cds/<?php echo $cd['image_name']; ?>" class="black" height="230" width="230">
+								<?php 
+
+									$image_path = strtolower($cd['cd_title'])."/".$cd['image_name'];
+
+								 ?>
+								<img src="images/cds/<?php echo $image_path; ?>" class="black" height="230" width="230">
 							<!-- </div> -->
 
 						</div>
@@ -244,11 +258,12 @@
 			
 			var errorsClean = errors.replace(/(<([^>]+)>)/ig,"");
 
-			alert(errorsClean);		}
+			alert(errorsClean);	
+		}
 
 	</script>
 	
-	<?php var_dump($cds); ?>
+	
 
 <body>
 </html>

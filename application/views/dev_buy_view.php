@@ -44,7 +44,14 @@
 			
 		<div class="cdListingDiv" id="cd_<?php echo $cd['cd_id'] ?>">
 			<div class="cdImageDiv">
-				<img src="images/cds/<?php echo $cd['image_name']; ?>" height="230" width="230">
+
+				<?php 
+
+					$image_path = strtolower($cd['cd_title'])."/".$cd['image_name'];
+
+				 ?>
+
+				<img src="images/cds/<?php echo $image_path; ?>" height="230" width="230">
 			</div>
 			<h3 class="cdTitle"><?php echo $cd['cd_title']; ?></h3>
 			<ol class="songList">
@@ -62,7 +69,7 @@
 						<?php 
 								$songTitle = $cd[$i]['song_title']; 
 								$clipName = $cd[$i]['clip_name'];
-								$cdTitle = $cd['cd_title'];
+								$cdTitle = strtolower($cd['cd_title']);
 						?>
 						<li data-src="music/clips/<?php echo $cdTitle."/".$clipName; ?>"><?php echo $songTitle; ?></li>
 

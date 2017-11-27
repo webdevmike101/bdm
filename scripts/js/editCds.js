@@ -2,6 +2,7 @@
 // Credo Web Development
 // 20171003
 
+// Get the current action attribute of the form, which will be insert_cd
 var actionInsert = $('form').attr('action');
 
 $(document).ready(function(){
@@ -34,11 +35,12 @@ $(document).ready(function(){
 
 		var id = $(this).attr('id');
 
-		action = actionInsert;
-		action = action.split('insert_cd'); 
-		action = action.reverse();
-		action = action.pop();
-		actionUpdate = action + "update_cd";;
+		action = str_replace('insert_cd', 'update_cd', actionInsert);
+		// action = actionInsert; // = /edit_cds/insert_cd
+		// action = action.split('insert_cd'); //  = /edit_cds/, insert_cd
+		// action = action.reverse(); // = insert_cd, edit_cds/
+		// action = action.pop(); // = edit_cds
+		// actionUpdate = action + "update_cd"; // = edit_cds/update_cd
 
 		$('#add-edit').text("Edit " + title);
 		$('#enterSongTitles').val("Edit Number of Songs");
@@ -49,7 +51,7 @@ $(document).ready(function(){
 		$('#input_release_date').val(releaseDate);
 		$('#input_total_songs').val(totalSongs);
 		$('#input_description').val(description);
-		$('form').attr('action', actionUpdate);
+		$('form').attr('action', action);
 		$('#cd-id').val(id);
 
 		// This if is just to make sure that enterSongTitle completes before the

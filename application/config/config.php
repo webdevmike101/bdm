@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-// **** For Develpoment ****
+// **** For Development ****
 $config['base_url']	= 'http://localhost/bdm/';
 
 // **** For Production ****

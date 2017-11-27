@@ -23,7 +23,7 @@
 	<div id="admin-wrapper">
 		<div id="admin-header">
 			<div id="admin-nav">
-				<a href="home">Home</a><p>|</p>
+				<a href="home">Home Page</a><p>|</p>
 				<a href="edit_cds">Edit CD's</a><p>|</p>
 				<a href="edit_schedule">Edit Schedule</a>
 			</div><!-- end #admin-nav -->

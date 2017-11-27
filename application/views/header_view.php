@@ -23,7 +23,7 @@
 	<div id="main-header-container">
 		<div id="main-header">
 			<div id="main-banner" class="float-left text-left">
-				<h1 id="bdm">Brian Dorsey Music</h1>
+				<h1 id="bdm">Brian Dorsey Ministries</h1>
 				<h2 id="ccm">Contemporary Christian Music</h2>
 			</div><!-- end main-banner -->
 			<div id="main-nav-div" class="float-right">
