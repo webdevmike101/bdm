@@ -118,6 +118,7 @@
 
 				<!-- Get the song titles -->
 				<div class="form_input" id="song-input-div" style="margin-left: 50px">
+					<input type="hidden" id="hidden-total-songs" value="<?=$sts?>" />
 
 					<!--  editCds.js -->
 

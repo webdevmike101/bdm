@@ -139,7 +139,7 @@
 #submit-btn-div{
 
     input{
-        background: #0f0;                                                                                                              ;
+        background-color: $btn-green;                                                                                                              ;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -147,7 +147,7 @@
     }
 
     #update-btn{
-        background: #00f;                                                                                                              ;
+        background-color: #00f;                                                                                                              ;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -155,7 +155,7 @@
     }    
 
     #delete-btn{
-        background: #f00;                                                                                                              ;
+        background-color: #f00;                                                                                                              ;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -163,7 +163,7 @@
     }
 
     #cancel-btn{
-        background: #cc0;                                                                                                              ;
+        background-color: #cc0;                                                                                                              ;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -262,18 +262,16 @@ input{
 
 }
 
-#upload-btn-div{
-    text-align: center;
-}
-
 #errors{
     color: #f00;
 }
 
 #upload-btn-div{
 
+    text-align: center;
+
     input{
-        background: #0f0;                                                                                                              ;
+        background-color: $btn-green;                                                                                                              ;
         color: #fff;
         font-weight: bold;
         padding: 5px;

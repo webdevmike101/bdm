@@ -696,25 +696,25 @@ li div {
     margin-left: 15px; }
 
 #submit-btn-div input {
-  background: #0f0;
+  background-color: #00cc00;
   color: #fff;
   font-weight: bold;
   padding: 5px;
   font-size: 14px; }
 #submit-btn-div #update-btn {
-  background: #00f;
+  background-color: #00f;
   color: #fff;
   font-weight: bold;
   padding: 5px;
   font-size: 14px; }
 #submit-btn-div #delete-btn {
-  background: #f00;
+  background-color: #f00;
   color: #fff;
   font-weight: bold;
   padding: 5px;
   font-size: 14px; }
 #submit-btn-div #cancel-btn {
-  background: #cc0;
+  background-color: #cc0;
   color: #fff;
   font-weight: bold;
   padding: 5px;
@@ -778,18 +778,17 @@ li div {
 textarea {
   resize: none; }
 
-#upload-btn-div {
-  text-align: center; }
-
 #errors {
   color: #f00; }
 
-#upload-btn-div input {
-  background: #0f0;
-  color: #fff;
-  font-weight: bold;
-  padding: 5px;
-  font-size: 14px; }
+#upload-btn-div {
+  text-align: center; }
+  #upload-btn-div input {
+    background-color: #00cc00;
+    color: #fff;
+    font-weight: bold;
+    padding: 5px;
+    font-size: 14px; }
 
 #updated {
   padding-left: 170px;

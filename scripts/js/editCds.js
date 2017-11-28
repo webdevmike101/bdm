@@ -3,11 +3,10 @@
 // 20171003
 
 // Get the current action attribute of the form, which will be insert_cd
-var actionInsert = $('form').attr('action');
+var currentAction = $('form').attr('action');
+var updating = false;
 
 $(document).ready(function(){
-
-	//alert("WORKING!!!!!");
 
 	// Set the focus on the input for total number of songs after a release date is selected
 	$('#input_release_date').focusout(function(){
@@ -27,6 +26,8 @@ $(document).ready(function(){
 	// Update the CD
 	$('.edit-cd-image').on('click', function(){
 
+		updating = true;
+
 		var title = $(this).siblings().first().children('ul').children('li').eq(0).text();
 		var price = $(this).siblings().first().children('ul').children('li').eq(1).text();
 		var releaseDate = $(this).siblings().first().children('ul').children('li').eq(2).text();
@@ -35,12 +36,7 @@ $(document).ready(function(){
 
 		var id = $(this).attr('id');
 
-		action = str_replace('insert_cd', 'update_cd', actionInsert);
-		// action = actionInsert; // = /edit_cds/insert_cd
-		// action = action.split('insert_cd'); //  = /edit_cds/, insert_cd
-		// action = action.reverse(); // = insert_cd, edit_cds/
-		// action = action.pop(); // = edit_cds
-		// actionUpdate = action + "update_cd"; // = edit_cds/update_cd
+		action = currentAction.replace('insert_cd', 'update_cd');
 
 		$('#add-edit').text("Edit " + title);
 		$('#enterSongTitles').val("Edit Number of Songs");
@@ -50,18 +46,20 @@ $(document).ready(function(){
 		$('#input_price').val(price);
 		$('#input_release_date').val(releaseDate);
 		$('#input_total_songs').val(totalSongs);
+		$('#hidden-total-songs').val(totalSongs);
 		$('#input_description').val(description);
 		$('form').attr('action', action);
 		$('#cd-id').val(id);
 
 		// This if is just to make sure that enterSongTitle completes before the
 		// song-title-inputs are populated.
-		if(enterSongTitle()){
+		if(enterSongTitle()){	
 
 			for(var i = 1; i <= totalSongs; i++ ){
 
 				$('#song-title-input-' + i).val($(this).siblings().first().children('ol').children('li').eq(i - 1).text());
-				$('#hidden-song-clip-input-' +i).val($(this).siblings().first().children('ol').children('li').eq(i - 1).attr('id'));
+				$('#song-clip-input-' + i).val($(this).siblings().first().children('ol').children('li').eq(i - 1).attr('id'));
+				alert($(this).siblings().first().children('ol').children('li').eq(i - 1).attr('id'));
 			}
 		};
 	});
@@ -69,6 +67,7 @@ $(document).ready(function(){
 
 function cancelUpdate(e){
 
+	updating = false;
 
 	$('#cd-form')[0].reset();
 	$('#input_total_songs').val(parseInt(0));
@@ -82,6 +81,7 @@ function cancelUpdate(e){
 
 function deleteCd(){
 
+	updating = false;
 }
 
 function insertCD(){
@@ -119,12 +119,12 @@ function insertCD(){
 		context: 	$('#here'),
 		sucess: 	function(data)
 		{
-			alert("success");
+			alert("ajax success");
 			//$(this).html(data);
 		},
 		error: function(data)
 		{
-			alert("error");
+			alert("ajax error");
 			//$(this).html('data');
 		},
 	});
@@ -134,13 +134,21 @@ function insertCD(){
 // and the Enter Song Titles button has been clicked
 // If we're coming back through because there were validation errors, "first_time_through" needs to be set to something other than
 // undefined, so it is set to the number of songs previously entered. That makes it easy to also set total_songs to the correct
-// number incase changes are made to the number of songs entered.
+// number in case changes are made to the number of songs entered.
 var first_time_through = parseInt($('#hidden-total-songs').val());		
 var total_songs = first_time_through;
+var songTitleType = "";
 
 function enterSongTitle(){
 
 	if(checkForNumbersOnly($('#input_total_songs').val())){
+
+		if(updating){
+			songTitleType = "text";
+		}
+		else{
+			songTitleType = "file";
+		}
 
 		if(first_time_through === undefined || isNaN(first_time_through)){
 
@@ -155,9 +163,9 @@ function enterSongTitle(){
 													"<label>Song " + i + "</label>&nbsp;"+
 													"<input type='text' size='50' class='form_input' id='song-title-input-" + i + "' name='song_" + i + "'/>"+
 												"<br/><div>"+
-													"<label>Song Clip</label>"+
-													"<input type='file' class='form_input' id='song-clip-input-" + i + "' name='song_clip_" + i + "' />"+
-													"<input type='hidden' class='form_input' id='hidden-song-clip-input-" + i + "' name='hidden_song_clip_" + i + "' />"+
+													"<label>Song Clip</label>&nbsp;"+
+													"<input type='" + songTitleType + "' size='46' class='form_input' id='song-clip-input-" + i + "' name='song_clip_" + i + "' />"+
+													//"<input type='hidden' class='form_input' id='hidden-song-clip-input-" + i + "' name='hidden_song_clip_" + i + "' />"+
 													"</div>"+
 												"</div>");
 			}
@@ -187,9 +195,9 @@ function enterSongTitle(){
 													"<label>Song " + (oldTotal + i) + "</label>&nbsp;"+
 													"<input type='text' size='50' class='form_input' id='song-title-input-" + (oldTotal + i) + "' name='song_" + (oldTotal + i) + "'/>"+
 													"<br/><div>"+
-													"<label>Song Clip</label>"+
-													"<input type='file' class='form_input' id='song-clip-input-" + i + "' name='song_clip_" + i + "' />"+
-													"<input type='hidden' class='form_input' id='hidden-song-clip-input-" + i + "' name='hidden_song_clip_" + i + "' />"+
+													"<label>Song Clip</label>&nbsp;"+
+													"<input type='" + songTitleType + "' size='46' class='form_input' id='song-clip-input-" + i + "' name='song_clip_" + i + "' />"+
+													//"<input type='hidden' class='form_input' id='hidden-song-clip-input-" + i + "' name='hidden_song_clip_" + i + "' />"+
 													"</div>"+
 												"</div>");
 				}	
@@ -201,6 +209,10 @@ function enterSongTitle(){
 	 	alert("Please enter a valid number of songs.");
 		// entry = undefined;
 	}
+
+	$('[id^="song-clip-input"]').on('click', function(){
+		this.type = "file";
+	});
 
 	// This return is just here for the if(enterSongTitle) statement above
 	// that ensures enterSongTitle completes before the script moves on.
