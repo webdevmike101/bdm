@@ -12,9 +12,10 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.mCustomScrollbar.css" />
 	<link rel="stylesheet" type="text/css" href="css/datepicker/jquery-ui-1.10.4.custom.min.css" />
 
-	<script type="text/javascript" src="scripts/js/lib/jquery-1.11.0.min.js"></script>
-	<script type="text/javascript" src="scripts/js/lib/jquery.mCustomScrollbar.concat.min.js"></script>
-	<script type="text/javascript" src="scripts/js/main.js"></script>
+	<script src="scripts/js/lib/jquery-1.11.0.min.js"></script>
+	<script src="scripts/js/lib/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="scripts/js/main.js"></script>
+	<script src="scripts/js/cdValidation.js"></script>
 
 
 

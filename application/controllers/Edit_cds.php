@@ -28,13 +28,15 @@ class Edit_cds extends CI_Controller
 		$action = "insert";
 		$_SESSION['errors'] = "";
 		$cdTitle = strtolower($this->input->post('title'));
+		$num_songs = $this->input->post('total_songs');
 
 		if(!is_dir('images/cds/'.$cdTitle))
 		{
 			mkdir('images/cds/'.$cdTitle);
 		}
 
-		$this->setValidationRules($action);
+		$this->unset_session_data($num_songs);
+		$this->setValidationRules($action, $num_songs);
  		// If the form vaildates, insert the CD information. Image first ////////////////////
  		/////////////////////////////////////////////////////////////////////////////////
 		if($this->form_validation->run())
@@ -42,7 +44,7 @@ class Edit_cds extends CI_Controller
 			$imageUploadConfig = array(
 				'image_library' => 'GD2',
 				'upload_path'	=> 'images/cds/'.$cdTitle,
-				'allowed_types'	=> 'gif|jpg|jpeg|png'
+				'allowed_types'	=> 'gif|jpg|jpeg|png|tif'
 			);
 
 			$this->load->library('upload', $imageUploadConfig, 'image_upload');
@@ -73,7 +75,17 @@ class Edit_cds extends CI_Controller
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				if($this->clips_upload->do_upload('song_clip_1'))
+				foreach($_FILES as $key => $value)
+				{
+					if(strpos($key, 'song_clip') === 0)
+					{
+						if($this->clips_upload->do_upload($key))
+							continue;
+						else
+							$_SESSION['errors'] = $this->upload->display_errors();
+					}
+				}
+				if(!isset($_SESSION['errors']))
 				{
 					$this->load->model('cd_model');
 
@@ -81,10 +93,6 @@ class Edit_cds extends CI_Controller
 					{
 						$_SESSION['errors'] = "There was a problem adding the CD. Please contact the Website Administrator.";
 					}
-				}
-				else
-				{
-					$_SESSION['errors'] = $this->upload->display_errors();
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 				////////////////////////CHANGE THIS TO UPLOAD MULTIPLE FILES////////////////////////////////////////////////
@@ -121,37 +129,16 @@ class Edit_cds extends CI_Controller
 
 	function update_cd(){
 
-		// $this->load->model('cd_model');
-		// $this->cd_model->_update_cd();
+		$this->load->model('cd_model');
+		$this->cd_model->_update_cd();
 
-		var_dump($_REQUEST);
-			var_dump($_FILES);
+		// var_dump($_REQUEST);
+		// 	var_dump($_FILES);
 	}
 
-	function setValidationRules($action)
+	function setValidationRules($action, $num_songs)
 	{
-		// Unset previous errors if there were any, so if there are none ////////////////////
-		// this time, there won't be errors carried over in $_SESSION. //////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
-		unset($_SESSION['errors']);
-		unset($_SESSION['title']);
-		unset($_SESSION['price']);
-		unset($_SESSION['release_date']);
-		unset($_SESSION['description']);
-
-		$num_songs = $this->input->post('total_songs');
-
-		for($i = 1; $i <= $num_songs; $i++)
-		{
-			unset($_SESSION['song_'.$i]);
-		}
-
-		unset($_SESSION['total_songs']);
-		/////////////////////////////////////////////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
-
-		// Set rules for all form input alidation////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////////////////////////////
+		// Set rules for all form input validation////////////////////////////////////////////
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('title', 'The Title', 'required');
 		$this->form_validation->set_rules('price', 'The Price', 'required');
@@ -178,5 +165,23 @@ class Edit_cds extends CI_Controller
 			$this->form_validation->set_rules('cd_image', 'An Image of the CD', 'required');
 			$this->form_validation->set_message('required', '%s is required.');
 		}
+	}
+
+	function unset_session_data($num_songs)
+	{
+		// Unset previous errors if there were any, so if there are none
+		// this time, there won't be errors carried over in $_SESSION.
+		unset($_SESSION['errors']);
+		unset($_SESSION['title']);
+		unset($_SESSION['price']);
+		unset($_SESSION['release_date']);
+		unset($_SESSION['description']);
+
+		for($i = 1; $i <= $num_songs; $i++)
+		{
+			unset($_SESSION['song_'.$i]);
+		}
+
+		unset($_SESSION['total_songs']);
 	}
 }

@@ -2,87 +2,67 @@
 	<!-- <script type="text/javascript" src="scripts/js/editCds.js"></script> -->
 	<!-- <script type="text/javascript" src="scripts/js/lib/jquery-1.11.0.min.js"></script> -->
 
-	<?php
-
-		if(isset($_FILES['name']))
-		{
-			var_dump($_FILES);
-		}
-
-
-	?>
-
-
 	<div id="edit-cds-div">
 		<div id="edit-cds-container">
 			<div id="edit-cds-left" class="form">
-				<form id="cd-form" action="<?php echo base_url()."edit_cds/insert_cd"; ?>" method="POST" enctype="multipart/form-data">
-
-				<?php 
-
-					// echo form_open_multipart('edit_cds/insert_cd', 'id="cd-form"');
-
-					$title = array(
-						'name'		=> 'title',
-						'id'		=> 'input_title',
-						'maxlength'	=> '50',
-						'class'		=> 'form_input'
+				<form id="cd-form" name="cd-form" action="<?php echo base_url()."edit_cds/insert_cd"; ?>" onsubmit="return validate_cd_input()" method="POST" enctype="multipart/form-data" novalidate>
+					<?php 
+						// echo form_open_multipart('edit_cds/insert_cd', 'id="cd-form"');
+						$title = array(
+							'name'		=> 'title',
+							'id'		=> 'input_title',
+							'maxlength'	=> '50',
+							'class'		=> 'form_input',
+							'required'	=> 'required'
+						);
+						$price = array(
+							'name'		=> 'price',
+							'id'		=> 'input_price',
+							'class'		=> 'form_input',
+							'type'		=> 'number',
+							'required'	=> 'required'
+						);
+						$release_date = array(
+							'name'		=> 'release_date',
+							'id'		=> 'input_release_date',
+							'class'		=> 'form_input',
+							'required'	=> 'required'
+						);
+						$total_songs = array(
+							'name'		=> 'total_songs',
+							'id'		=> 'input_total_songs',
+							'type'		=> 'number',
+							'max'		=> '99',
+							'min'		=> '1',
+							'class'		=> 'form_input song_input',
+							'autocomplete' => 'off',
+							'required'	=> 'required'
+						);
+						$description = array(
+							'name'		=> 'description',
+							'id'		=> 'input_description',
+							'class'		=> 'form_input',
+							'rows'		=> '5',
+							'cols'		=> '50',
+							'required'	=> 'required'
+						);
+						$cd_image = array(
+							'name'		=> 'cd_image',
+							'id'		=> 'input_cd_image',
+							'maxlength'	=> '100',
+							'class'		=> 'form_input file_selection',
+							'onchange'	=> 'check_image_file_extension()',
+							'required'	=> 'required'
 						);
 
-					$price = array(
-						'name'		=> 'price',
-						'id'		=> 'input_price',
-						'maxlength'	=> '5',
-						'minlength'	=> '5',
-						'class'		=> 'form_input'
-						);
+						$errors = isset($_SESSION['errors']);
 
-					$release_date = array(
-						'name'		=> 'release_date',
-						'id'		=> 'input_release_date',
-						'class'		=> 'form_input'
-						);
-
-					$total_songs = array(
-						'name'		=> 'total_songs',
-						'id'		=> 'input_total_songs',
-						'maxlength'	=> '99',
-						'minlength'	=> '1',
-						'class'		=> 'form_input song_input',
-						'autocomplete' => 'off'
-						);
-
-					$description = array(
-						'name'		=> 'description',
-						'id'		=> 'input_description',
-						'class'		=> 'form_input',
-						'rows'		=> '5',
-						'cols'		=> '50'
-						);
-
-					$cd_image = array(
-						'name'		=> 'cd_image',
-						'id'		=> 'input_cd_image',
-						'maxlength'	=> '100',
-						'class'		=> 'form_input file_selection'
-						);
-
-					$st = ""; // SESSION title
-					$sp = ""; // SESSION price
-					$srd = ""; // SESSION release_date
-					$sts = ""; // SESSION total_songs
-					$sd = ""; // SESSION description
-
-					if(isset($_SESSION['errors'])){
-
-						$st = $_SESSION['title'];
-						$sp = $_SESSION['price'];
-						$srd = $_SESSION['release_date'];
-						$sd = $_SESSION['description'];
-						$sts = $_SESSION['total_songs'];
-					}
-								
-				?>
+						$st = $errors ? $_SESSION['title'] : null;
+						$sp = $errors ? $_SESSION['price'] : null;
+						$srd = $errors ? $_SESSION['release_date'] : null;
+						$sd = $errors ? $_SESSION['description'] : null;
+						$sts = $errors ? $_SESSION['total_songs'] : null;									
+					?>
 				<h1 id="add-edit">Add New CD</h1>
 		
 				<!-- Get the CD Tilte -->
@@ -117,8 +97,8 @@
 				</div><br/>
 
 				<!-- Get the song titles -->
+				<input type="hidden" id="hidden-total-songs" value="<?=$sts?>" />
 				<div class="form_input" id="song-input-div" style="margin-left: 50px">
-					<input type="hidden" id="hidden-total-songs" value="<?=$sts?>" />
 
 					<!--  editCds.js -->
 
@@ -139,9 +119,9 @@
 				<!-- Submit the Form -->
 				<div id="submit-btn-div">
 					<?php echo form_submit('submit-btn', "Upload"); ?>
-					<span id="delete-cancel-btns-span" style="visibility: hidden">
+					<span id="delete-cancel-btns-span"><!--- style="visibility: hidden"> -->
 						<!-- <button type="button" id="update-btn" onclick="updateCd()">Update</button> -->
-						<button type="button" id="cancel-btn" onclick="cancelUpdate()">Cancel</button>
+						<button type="reset" id="cancel-btn" onclick="cancelUpdate()">Cancel</button>
 						<!-- <button type="button" id="delete-btn" onclick="deleteCd()" style="margin-left: 140px">Delete</button> -->
 					</span>
 				</div><br/>
@@ -182,65 +162,34 @@
 				</div><!-- end #errors -->
 			</div><!-- end #edit-cds-left-->
 			<div id="edit-cds-right">
-
-
-
-					<p style="color: green; font-weight: bold; font-size: 18px; text-align: center; margin-bottom: 30px">Click a CD to edit the details</p>
-
-
+					<p style="font-weight: bold; font-size: 18px; text-align: center; margin-bottom: 10px">Click a CD to edit the details</p>
+					<script> var cds = [] </script>
 					<?php foreach($cds as $cd): ?>
-					<div class="edit-cds-cd-list-div">
-						<div class="edit-cd-image" id="<?php echo $cd['cd_id']; ?>">
-							<!-- <div class="black"> -->
-								<?php 
-
-									$image_path = strtolower($cd['cd_title'])."/".$cd['image_name'];
-
-								 ?>
-								<img src="images/cds/<?php echo $image_path; ?>" class="black" height="230" width="230">
-							<!-- </div> -->
-
+						<script> cds[ <?php echo $cd['cd_id']; ?> ] = <?php echo json_encode($cd); ?> ; </script>
+						<hr style="margin: 0 0 20px 0;"></hr>
+						<div class="edit-cds-cd-list-div">
+							<div class="edit-cd-image" id="<?php echo $cd['cd_id']; ?>">
+								<img src="images/cds/<?php echo strtolower($cd['cd_title'])."/".$cd['image_name']; ?>" class="black" height="230" width="230">
+							</div>
+							<div class="edit-cd-details">
+								<ul>
+									<li><?php echo $cd['cd_title']; ?></li>
+									<li>$<?php echo $cd['price']; ?></li>
+									<li><?php echo $cd['release_date']; ?></li>
+								</ul>
+								<ol>			
+									
+									<?php for($i = 0; $i < $cd['total_songs']; ++$i): ?>
+										<li id="<?php echo $cd[$i]['clip_name']; ?>"><?php echo $cd[$i]['song_title']; ?></li>
+									<?php endfor; ?>
+								</ol>
+							</div><!-- end cdListingDiv-->
+							<div class="edit-cd-description">
+								<p><?php echo $cd['description']; ?></p>
+							</div>						
 						</div>
-						<div class="edit-cd-details">
-							<ul>
-								<li><?php echo $cd['cd_title']; ?></li>
-								<li><?php echo "$". $cd['price']; ?></li>
-								<li><?php echo $cd['release_date']; ?></li>
-							</ul>
-							<ol>			
-								
-								<?php for($i = 0; $i < $cd['total_songs']; ++$i): ?>
-									<li id="<?php echo $cd[$i]['clip_name']; ?>"><?php echo $cd[$i]['song_title']; ?></li>
-								<?php endfor; ?>
-							</ol>
-							
-							
-							
-							
-						</div><!-- end cdListingDiv-->
-						<div class="edit-cd-description">
-							<p><?php echo $cd['description']; ?></p>
-						</div>						
-					</div>
-					<hr style="margin: 0 0 20px 0;"></hr>
 					<?php endforeach; ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+					<hr style="margin: 0 0 20px 0;"></hr>
 			</div><!-- end #edit-cds-right -->
 		</div><!-- end #edit-cds-container -->
 	</div><!-- end #edit-cds-div -->

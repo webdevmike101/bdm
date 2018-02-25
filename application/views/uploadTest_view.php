@@ -23,7 +23,7 @@
 			?>
 
 		<div>
-			<?=form_label('Song Clip:', 'userfile')?><!-- CI expects "userfile" by default. -->
+			<?=form_label('Clip:', 'userfile')?><!-- CI expects "userfile" by default. -->
 			<?=form_upload($song_clip)?>
 		</div><br/>
 

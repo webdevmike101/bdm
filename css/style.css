@@ -725,22 +725,21 @@ li div {
   display: grid;
   grid-template-columns: 40% 60%; }
 
-#edit-cds-left {
-  /*float: left;*/ }
-
-#edit-cds-right {
-  /*float: left;*/ }
-
 .edit-cd-image {
-  grid-area: image; }
+  grid-area: image;
+  padding-top: 10px; }
 
 .edit-cd-details {
   grid-area: details; }
+  .edit-cd-details ul {
+    padding-left: 25px;
+    margin-top: 0; }
 
 .edit-cd-description {
   grid-area: description; }
 
 .edit-cds-cd-list-div {
+  padding-left: 30px;
   display: grid;
   grid-template-columns: 40% 60%;
   grid-template-rows: auto;
@@ -778,6 +777,9 @@ li div {
 textarea {
   resize: none; }
 
+.clip {
+  padding-left: 23px; }
+
 #errors {
   color: #f00; }
 
@@ -803,6 +805,24 @@ textarea {
 
 .song-title-div {
   margin-bottom: 10px; }
+  .song-title-div input[id*='song-'] {
+    width: 300px; }
+  .song-title-div input[id*='song-title-'] {
+    margin-bottom: 5px; }
+
+.red-text-file {
+  color: #f00; }
+
+.red-text::placeholder {
+  color: #f00; }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
+
+input[type="number"] {
+  -moz-appearance: textfield; }
 
 #gallery-content {
   width: 850px;

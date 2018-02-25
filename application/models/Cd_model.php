@@ -104,14 +104,17 @@ class Cd_model extends CI_Model {
 		}
 	}
 
-	function _update_cd(){//$id, $data) {
+	function _update_cd() {
+
+		// $id = $_REQUEST['cd_id'];
+
 		// $cd_table = $this->get_cd_table();
 		// $this->db->where('id', $id);
 		// $this->db->update($cd_table, $data);
-		// var_dump($_FILES);
 	}
 
-	function _delete_cd($id) {
+	function _delete_cd($id){
+
 		$cd_table = $this->get_cd_table();
 		$this->db->where('id', $id);
 		$this->db->delete($cd_table);

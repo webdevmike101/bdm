@@ -139,7 +139,7 @@
 #submit-btn-div{
 
     input{
-        background-color: $btn-green;                                                                                                              ;
+        background-color: $btn-green;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -147,7 +147,7 @@
     }
 
     #update-btn{
-        background-color: #00f;                                                                                                              ;
+        background-color: #00f;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -155,7 +155,7 @@
     }    
 
     #delete-btn{
-        background-color: #f00;                                                                                                              ;
+        background-color: #f00;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -163,7 +163,7 @@
     }
 
     #cancel-btn{
-        background-color: #cc0;                                                                                                              ;
+        background-color: #cc0;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -179,19 +179,23 @@
 }
 
 #edit-cds-left{
-    /*float: left;*/
 }
 
 #edit-cds-right{
-    /*float: left;*/
 }
 
 .edit-cd-image{
     grid-area: image;
+    padding-top: 10px;
 }
 
 .edit-cd-details{
     grid-area: details;
+
+    ul{
+        padding-left: 25px;
+        margin-top: 0;
+    }
 }
 
 .edit-cd-description{
@@ -199,6 +203,7 @@
 }
 
 .edit-cds-cd-list-div{
+    padding-left: 30px;
     display: grid;
     grid-template-columns: 40% 60%;
     grid-template-rows: auto;
@@ -258,6 +263,10 @@ label{
 
 }
 
+.clip{
+    padding-left: 23px;
+}
+
 input{
 
 }
@@ -271,7 +280,7 @@ input{
     text-align: center;
 
     input{
-        background-color: $btn-green;                                                                                                              ;
+        background-color: $btn-green;
         color: #fff;
         font-weight: bold;
         padding: 5px;
@@ -300,5 +309,32 @@ input{
 
 .song-title-div{
     margin-bottom: 10px;
+
+    input[id*='song-']{
+        width: 300px;
+    }
+    input[id*='song-title-']{
+        margin-bottom: 5px;
+    }
+        input[id*='song-clip-']{
+
+    }
 }
 
+.red-text-file{
+    color: #f00;
+}
+
+.red-text::placeholder{
+    color: #f00;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
